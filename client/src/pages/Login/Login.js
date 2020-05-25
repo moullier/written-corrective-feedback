@@ -68,6 +68,7 @@ class Login extends Component {
         <label htmlFor="inputPassword" className="sr-only">Password</label>
         <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={this.handleChange}/>
         <button className="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>
+        <p id="li-error"></p>
         <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
         </form>
         </div>

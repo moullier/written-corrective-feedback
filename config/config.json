@@ -2,7 +2,7 @@
     "development": {
       "username": "root",
       "password": "bobo1029",
-      "database": "covidtracker",
+      "database": "wcfdatabase",
       "host": "127.0.0.1",
       "dialect": "mysql"
     },
