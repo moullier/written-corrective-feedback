@@ -35,9 +35,11 @@ module.exports = function (app) {
       password: req.body.password,
     })
       .then(function (us) {
+        console.log(us);
         res.json({
           email: req.body.email,
-          id: us.dataValues.id
+          id: us.dataValues.id,
+          ftu: us.dataValues.firstTimeUse
         })
       })
       .catch(function (err) {
@@ -75,6 +77,35 @@ module.exports = function (app) {
       });
     }
   });
+
+
+  // PUT ROUTES
+
+  app.put("/api/update_user_inst/:id", function (req, res) {
+
+    console.log("The user id being modified is: " + req.params.id);
+    console.log("req.body" + req.body);
+    console.log("req.body.institution " + req.body.institution);
+    db.User.update({ display_name: req.body.display_name }, {
+      where: {
+        id: req.params.id
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+// EVERYTHING BELOW THIS IS REFERENCE MATERIAL ONLY
+
+
 
 // GET ROUTES
 
@@ -123,9 +154,9 @@ app.get("/api/disasterkit/:id", function(req, res){
 
 // POST ROUTES
 
-// create new location entry for a user
-app.post("/api/add_location", function (req, res) {
-  console.log("hit /api/add_location");
+// add new institution entry for a user
+app.post("/api/add_institution", function (req, res) {
+  console.log("hit /api/add_institution");
 
   db.Location.create({
     state: req.body.state,

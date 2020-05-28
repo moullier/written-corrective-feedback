@@ -31,22 +31,29 @@ class Signup extends Component {
     event.preventDefault();
     console.log("attempt to create account");
 
-    Axios.post("/api/login", {
+    Axios.post("/api/signup", {
       email: this.state.email,
       password: this.state.password
     })
     .then((data) => {
       console.log("data: ");
-      let firstTime = data.data.ftu;
-      console.log(firstTime);
-      // if user is a first time user, push to FTU page, otherwise to dashboard
-      if(firstTime) {
-        this.props.history.push("/ftu");
-        window.location.reload();
-      } else {
-        this.props.history.push("/dashboard");
-        window.location.reload();
-      }
+      console.log(data);
+      Axios.post("/api/login", {
+        email: this.state.email,
+        password: this.state.password
+      })
+      .then((res) => {
+        let firstTime = data.data.ftu;
+        console.log(firstTime);
+        // if user is a first time user, push to FTU page, otherwise to dashboard
+        if(firstTime) {
+          this.props.history.push("/ftu");
+          window.location.reload();
+        } else {
+          this.props.history.push("/dashboard");
+          window.location.reload();
+        }
+      })
     })
     .catch(function(err) {
       console.log("Error");
