@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../../App.css";
 import Axios from "axios";
+import { Link, Redirect } from "react-router-dom";
 import $ from "jquery";
 
 class FTU extends Component {
@@ -8,6 +9,7 @@ class FTU extends Component {
     super(props);
 
     this.state = {
+        uid: null,
         institution: ""
     };
   }
@@ -17,6 +19,7 @@ class FTU extends Component {
         Axios.get("/api/user_data")
         .then((data) => {
             console.log(data);
+            this.setState({uid: data.data.id});
         })
     }
 
@@ -28,6 +31,11 @@ class FTU extends Component {
         .then((data) => {
             console.log("data: ");
             console.log(data);
+            this.props.history.push({
+                pathname: '/dashboard',
+                state: { id: this.state.uid }
+            });
+            window.location.reload();
         })
     }
 
@@ -47,7 +55,7 @@ class FTU extends Component {
             <h1>User Setup</h1>
             <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Enter Your Institution Name</label>
+                    <label htmlFor="inputInst">Enter Your Institution Name</label>
                     <input 
                         onChange={this.handleChange}
                         type="text"
@@ -55,7 +63,11 @@ class FTU extends Component {
                         name="institution"
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                <Link to={{
+                    pathname: '/dashboard',
+                    state: { id: this.state.uid }
+                }}>Skip</Link>
             </form>
         </div>
     )

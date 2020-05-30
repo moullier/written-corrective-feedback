@@ -38,15 +38,15 @@ module.exports = function(sequelize, DataTypes) {
     user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
   });
 
-  /*
+  
   User.associate = function(models) {
-    // Associating Class with User
+    // Associating ClassList with User
     // When a User is deleted, also delete any associated Classes (??)
-    User.hasMany(models.Location, {
+    User.hasMany(models.ClassList, {
       onDelete: "cascade"
     });
   };
-*/
+
 
   return User;
 };

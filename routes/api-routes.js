@@ -78,6 +78,24 @@ module.exports = function (app) {
     }
   });
 
+  // GET ROUTES
+
+app.get("/api/class_list/:id", function (req, res) {
+  let userId = req.params.id;
+
+  console.log("userId in /api/class_list = " + userId);
+  
+  db.ClassList.findAll({
+    where: {
+      UserId: userId
+    }
+  }).then(function(dbClassList) {
+    res.json(dbClassList);
+  })
+
+})
+
+
 
   // PUT ROUTES
 
@@ -86,12 +104,21 @@ module.exports = function (app) {
     console.log("The user id being modified is: " + req.params.id);
     console.log("req.body" + req.body);
     console.log("req.body.institution " + req.body.institution);
-    db.User.update({ display_name: req.body.display_name }, {
-      where: {
-        id: req.params.id
-      }
-    });
+    db.User.update(
+      { institution: req.body.institution }, 
+      {
+        where: {
+          id: req.params.id
+        }
+      })
+    .then(function(data) {
+      console.log("DATA IS");
+      console.log(data);
+      res.json({
+        data: data
+      });
   });
+})
 
 
 

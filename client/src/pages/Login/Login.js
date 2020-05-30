@@ -61,7 +61,7 @@ class Login extends Component {
       return (
         <div className="text-center">
         <form className="form-signin" onSubmit={this.handleSubmit}>
-        <img className="mb-4" src="http://getbootstrap.com/docs/4.5/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
+        <img className="mb-4" src={"../../../assets/images/check.png"} alt="checkmark icon" width="72" height="72" />
         <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label htmlFor="inputEmail" className="sr-only">Email address</label>
         <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus onChange={this.handleChange}/>

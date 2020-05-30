@@ -43,6 +43,8 @@ class Signup extends Component {
         password: this.state.password
       })
       .then((res) => {
+        console.log("successful login");
+        console.log(res);
         let firstTime = data.data.ftu;
         console.log(firstTime);
         // if user is a first time user, push to FTU page, otherwise to dashboard
@@ -67,7 +69,7 @@ class Signup extends Component {
       return (
         <div className="text-center">
         <form className="form-signup" onSubmit={this.handleSubmit}>
-          <img className="mb-4" src="http://getbootstrap.com/docs/4.5/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
+          <img className="mb-4" src={"../../../assets/images/check.png"} alt="" width="72" height="72" />
           <h1 className="h3 mb-3 font-weight-normal">Please create account</h1>
           <label htmlFor="inputEmail" className="sr-only">Email address</label>
           <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Enter Email address" required autoFocus onChange={this.handleChange}/>
@@ -75,7 +77,7 @@ class Signup extends Component {
           <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Enter Password" required onChange={this.handleChange}/>
           <label htmlFor="inputPassword" className="sr-only">Password</label>
           <input type="password" name="password_confirm" id="confirmPassword" className="form-control" placeholder="Confirm Password" required onChange={this.handleChange}/>
-          <button className="btn btn-lg btn-primary btn-block" type="submit" >Create Account</button>
+          <button className="btn btn-lg btn-primary btn-block my-4" type="submit" >Create Account</button>
           <p id="li-error"></p>
           <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
         </form>
