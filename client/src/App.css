@@ -1,7 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito|Quicksand');
 
 .App {
+  width: 100%;
   text-align: center;
+}
+
+html, body, #root, .App {
+  height: 100%;
+  width: 100%;
 }
 
 body{
@@ -15,4 +21,17 @@ h4,
 h5,
 h6 {
   font-family: 'Quicksand', sans-serif;
+}
+
+.initiallyHidden { 
+  display: none;
+}
+
+#noPeriod, #noClass {
+  color: #B33A3A;
+  font-weight: bold;
+}
+
+#mainDiv {
+  width: 100%;
 }

@@ -95,6 +95,33 @@ app.get("/api/class_list/:id", function (req, res) {
 
 })
 
+  // POST ROUTES
+
+  app.post("/api/new_class/:id", function (req, res) {
+    console.log("The user id being modified is: " + req.params.id);
+    console.log("req.body.className" + req.body.className);
+    console.log("req.body.classPeriod" + req.body.classPeriod);
+    
+    db.ClassList.create({
+      name: req.body.className,
+      time_period: req.body.classPeriod,
+      UserId: req.params.id
+    })
+    .then(function (data) {
+  
+      console.log(data);
+      // let locationObject = {
+      //   state: req.body.state,
+      //   county: req.body.county,
+      //   UserId: req.body.uid
+      // }
+      // console.log("Below is the log of the newly created locationObject");
+      // console.log(locationObject);
+      res.json(data);
+    });
+
+  })
+
 
 
   // PUT ROUTES
@@ -119,7 +146,6 @@ app.get("/api/class_list/:id", function (req, res) {
       });
   });
 })
-
 
 
 
