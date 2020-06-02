@@ -18,10 +18,10 @@ class App extends Component {
           <Route exact path={"/signup"} component={Signup} />
           <Route exact path={"/login"} component={Login} />
           <Route exact path={"/FTU"} component={FTU} />
-          <Route exact path={"/Dashboard"} component={Dashboard} />
-          <Route exact path={"/Class"} component={Class} />
-          <Route exact path={"/Assignment"} component={Assignment} />
-          <Route exact path={"/Tool1"} component={Tool1} />
+          <Route exact path={"/dashboard"} component={Dashboard} />
+          <Route exact path={"/class"} component={Class} />
+          <Route exact path={"/assignment"} component={Assignment} />
+          <Route exact path={"/tool1"} component={Tool1} />
           <Route exact path={'/'} component={Home} />
         </Switch>
       </BrowserRouter>

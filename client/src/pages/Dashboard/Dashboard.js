@@ -28,6 +28,7 @@ class Dashboard extends Component {
     this.selectTimeFrame = this.selectTimeFrame.bind(this);
     this.createNewClass = this.createNewClass.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.goToClassPage = this.goToClassPage.bind(this);
     
   }
 
@@ -74,6 +75,17 @@ class Dashboard extends Component {
     e.preventDefault();
   }
 
+  goToClassPage(e) {
+    console.log(e.target.value);
+    this.props.history.push({
+      pathname: '/class',
+      state: { 
+        uid: this.state.uid,
+        classId: e.target.value }
+     });
+    window.location.reload();
+  }
+
   handleChange(e) {
     e.preventDefault();
     console.log(e.target.value);
@@ -101,9 +113,9 @@ class Dashboard extends Component {
           <button 
           value={classEl.id}
           className="btn btn-primary"
-          onClick={this.clearNewClass}
+          onClick={this.goToClassPage}
           >
-            Assignments
+            Class Hub
           </button>
         </div>
       </div>));
