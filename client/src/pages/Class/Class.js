@@ -6,6 +6,19 @@ import $ from "jquery";
 class Class extends Component {
   constructor(props) {
     super(props);
+
+    console.log("some props");
+    console.log(this.props.location.state);
+
+    this.state = {
+      uid: this.props.location.state.uid,
+      classId: this.props.location.state.classId
+    }
+  }
+
+  componentDidMount () {
+    Axios.get("/api/assignment_list/" + this.state.classId)
+    .then()
   }
 
   render() {

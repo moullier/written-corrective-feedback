@@ -92,7 +92,21 @@ app.get("/api/class_list/:id", function (req, res) {
   }).then(function(dbClassList) {
     res.json(dbClassList);
   })
+})
 
+app.get("/api/assignment_list/:id", function (req, res) {
+  let classId = req.params.id;
+
+  console.log("classId in /api/assignment_list = " + classId);
+
+  db.Assignment.findAll({
+    where: {
+      id: classId
+    }
+  }).then(function(dbAssignmentList) {
+    console.log(dbAssignmentList);
+    res.json(dbAssignmentList);
+  })
 })
 
   // POST ROUTES
