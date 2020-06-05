@@ -101,11 +101,23 @@ app.get("/api/assignment_list/:id", function (req, res) {
 
   db.Assignment.findAll({
     where: {
-      id: classId
+      ClassListId: classId
     }
   }).then(function(dbAssignmentList) {
     console.log(dbAssignmentList);
     res.json(dbAssignmentList);
+  })
+})
+
+app.get("/api/class_name/:id", function (req, res) {
+  let classId = req.params.id;
+
+  db.ClassList.findOne({
+    where: {
+      id: classId
+    }
+  }).then(function(dbClassName) {
+    res.json(dbClassName);
   })
 })
 

@@ -102,8 +102,8 @@ class Dashboard extends Component {
   }
 
   render() {
-    console.log("Total Width:");
-    console.log(window.screen.width);
+    // console.log("Total Width:");
+    // console.log(window.screen.width);
     let pageToRender = "";
     let mapStatement = this.state.classList.map((classEl, index) => (
       <div className="row mb-2" key={index}>

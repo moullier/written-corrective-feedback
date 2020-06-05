@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../../App.css";
+import "./index.css";
 import Axios from "axios";
 import $ from "jquery";
 
