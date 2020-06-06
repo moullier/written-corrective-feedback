@@ -145,7 +145,30 @@ app.get("/api/class_name/:id", function (req, res) {
       // console.log(locationObject);
       res.json(data);
     });
+  })
 
+  app.post("/api/new_assignment/:id", function (req, res) {
+    console.log("The class id being modified is: " + req.params.id);
+    console.log("req.body.className" + req.body.className);
+    console.log("req.body.classPeriod" + req.body.classPeriod);
+    
+    db.Assignment.create({
+      name: req.body.assnTitle,
+      description: req.body.assnDescription,
+      ClassListId: req.params.id
+    })
+    .then(function (data) {
+  
+      console.log(data);
+      // let locationObject = {
+      //   state: req.body.state,
+      //   county: req.body.county,
+      //   UserId: req.body.uid
+      // }
+      // console.log("Below is the log of the newly created locationObject");
+      // console.log(locationObject);
+      res.json(data);
+    });
   })
 
 

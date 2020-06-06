@@ -44,7 +44,7 @@ class Dashboard extends Component {
   // has been selected.  If so, add to database.
   createNewClass(e) {
     e.preventDefault();
-    console.log("attempt createNewClass");
+    // console.log("attempt createNewClass");
     if(this.state.newClassName !== "") {
       if(this.state.newClassPeriod !== "Select Class Period") {
         console.log("add new class to database");
