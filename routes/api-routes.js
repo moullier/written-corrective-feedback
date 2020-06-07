@@ -94,6 +94,8 @@ app.get("/api/class_list/:id", function (req, res) {
   })
 })
 
+
+// get all assignments for a specific given class
 app.get("/api/assignment_list/:id", function (req, res) {
   let classId = req.params.id;
 
@@ -109,6 +111,22 @@ app.get("/api/assignment_list/:id", function (req, res) {
   })
 })
 
+
+app.get("/api/assignment/:id", function (req, res) {
+  let assnId = req.params.id;
+
+  db.Assignment.findOne({
+    where: {
+      id: assnId
+    }
+  }).then(function(dbAssignment) {
+    console.log(dbAssignment);
+    res.json(dbAssignment);
+  })
+})
+
+
+// get info on a class when given the classId
 app.get("/api/class_name/:id", function (req, res) {
   let classId = req.params.id;
 

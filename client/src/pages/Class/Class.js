@@ -66,7 +66,10 @@ class Class extends Component {
             $("#addAssnModal").modal('hide')
           });
         });
-    })
+      })
+      .catch(err => {
+        console.log(err);
+      })
     } else {
       $("#noTitle").show();
     }
