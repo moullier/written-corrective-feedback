@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import "../../App.css";
-import "./index.css";
+import "./Login.css";
 import $ from "jquery";
 
 class Login extends Component {
@@ -59,18 +59,18 @@ class Login extends Component {
 
   render() {
       return (
-        <div className="text-center">
-        <form className="form-signin" onSubmit={this.handleSubmit}>
-        <img className="mb-4" src={"../../../assets/images/check.png"} alt="checkmark icon" width="72" height="72" />
-        <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label htmlFor="inputEmail" className="sr-only">Email address</label>
-        <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus onChange={this.handleChange}/>
-        <label htmlFor="inputPassword" className="sr-only">Password</label>
-        <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={this.handleChange}/>
-        <button className="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>
-        <p id="li-error"></p>
-        <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
-        </form>
+        <div className="Login text-center">
+          <form className="Login-form" onSubmit={this.handleSubmit}>
+            <img className="mb-4" src={"../../../assets/images/check.png"} alt="checkmark icon" width="72" height="72" />
+            <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <label htmlFor="inputEmail" className="sr-only">Email address</label>
+            <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus onChange={this.handleChange}/>
+            <label htmlFor="inputPassword" className="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={this.handleChange}/>
+            <button className="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>
+            <p id="li-error"></p>
+            <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
+          </form>
         </div>
       );
     }

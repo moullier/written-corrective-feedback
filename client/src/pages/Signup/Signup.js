@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import Axios from "axios";
 import "../../App.css";
 import "./index.css";
-import Axios from "axios";
 import $ from "jquery";
 
 class Signup extends Component {

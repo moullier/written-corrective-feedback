@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../../App.css";
+import "./FTU.css"
 import Axios from "axios";
 import { Link, Redirect } from "react-router-dom";
 import $ from "jquery";
@@ -49,9 +50,15 @@ class FTU extends Component {
         });
     }
 
+    addNewInstitution(event) {
+        event.preventDefault();
+
+
+    }
+
   render() {
     return (
-        <div>
+        <div className="FTU-content">
             <h1>User Setup</h1>
             <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
@@ -64,6 +71,8 @@ class FTU extends Component {
                     />
                 </div>
                 <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                <button onClick={this.addNewInstitution}
+                className="btn btn-secondary mr-2">Add Another Institution</button>
                 <Link to={{
                     pathname: '/dashboard',
                     state: { id: this.state.uid }
