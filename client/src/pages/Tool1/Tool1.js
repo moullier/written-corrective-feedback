@@ -52,6 +52,10 @@ class Tool1 extends Component {
     });
   }
 
+  showNextStep(e) {
+    console.log(e.target.value);
+  }
+
   render() {
     const { assignedDay, isDisabled, isEmpty } = this.state;
     const { dueDay, dueDisabled, dueEmpty } = this.state;
@@ -136,20 +140,21 @@ class Tool1 extends Component {
                 </tbody>
               </table>
             </div>
+            <button className="btn btn-primary" value="1" onClick={this.showNextStep}>Next Step</button>
           </div>
           <div className="initiallyHidden" id="step_2">
             <h5 >Step 2: Determining Error Types for Focused Feedback</h5>
           </div>
-            <div className="initiallyHidden" id="step_2">
+            <div className="initiallyHidden" id="step_3">
           <h5>Step 3: Determining the Directness of Feedback</h5>
           </div>
-          <div className="initiallyHidden" id="step_2">
+          <div className="initiallyHidden" id="step_4">
             <h5>Step 4: Setting Student Expectations</h5>
           </div>
-          <div className="initiallyHidden" id="step_2">
+          <div className="initiallyHidden" id="step_5">
             <h5>Step 5: Determine What Learners Will Have to Do In Response to Your WCF Strategy</h5>
           </div>
-          <div className="initiallyHidden" id="step_2">
+          <div className="initiallyHidden" id="step_6">
             <h5>Step 6: Peer WCF (Optional) </h5>
           </div>
           <Link to={{
