@@ -177,16 +177,28 @@ app.get("/api/class_name/:id", function (req, res) {
     })
     .then(function (data) {
   
-      console.log(data);
-      // let locationObject = {
-      //   state: req.body.state,
-      //   county: req.body.county,
-      //   UserId: req.body.uid
-      // }
-      // console.log("Below is the log of the newly created locationObject");
-      // console.log(locationObject);
+      // console.log(data);
       res.json(data);
     });
+  })
+
+  app.post("/api/new_tool1/:assn_id", function (req, res) {
+    console.log(req.params.assn_id);
+    
+    console.log(req.body.dateAssigned);
+    console.log(req.body.dueDate);
+    console.log(req.body.returnDate);
+
+    db.Tool1.create({
+      dateAssigned: req.body.dateAssigned,
+      dueDate: req.body.dueDate,
+      returnDate: req.body.returnDate,
+      AssignmentId: req.params.assn_id
+    })
+    .then(function (data) {
+      console.log(data);
+      res.json(data);
+    })
   })
 
 

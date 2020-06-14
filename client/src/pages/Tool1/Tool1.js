@@ -24,14 +24,19 @@ class Tool1 extends Component {
       assignmentTitle: this.props.location.state.assignmentTitle,
       assignedDay: undefined,
       dueDay: undefined,
+      returnDay: undefined,
       isEmpty: true,
       isDisabled: false,
       dueEmpty: true,
-      dueDisabled: false
+      dueDisabled: false,
+      returnEmpty: true,
+      returnDisabled: false
     }
 
     this.handleDayChange = this.handleDayChange.bind(this);
     this.handleDueDayChange = this.handleDueDayChange.bind(this);
+    this.handleReturnDayChange = this.handleReturnDayChange.bind(this);
+    this.showNextStep = this.showNextStep.bind(this);
   }
 
   handleDayChange(assignedDay, modifiers, dayPickerInput) {
@@ -52,20 +57,54 @@ class Tool1 extends Component {
     });
   }
 
+  handleReturnDayChange(returnDay, modifiers, dayPickerInput) {
+    const input = dayPickerInput.getInput();
+    this.setState({
+      returnDay,
+      returnEmpty: !input.value.trim(),
+      returnDisabled: modifiers.disabled === true,
+    });
+  }
+
   showNextStep(e) {
     console.log(e.target.value);
+    let currentStep = parseInt(e.target.value);
+    console.log(this.state.assignmentId);
+
+    Axios.post("/api/new_tool1/" + this.state.assignmentId, {
+      dateAssigned: this.state.assignedDay,
+      dueDate: this.state.dueDay,
+      returnDate: this.state.returnDay,
+      AssignmentId: this.state.assignmentId
+    })
+    .then(res => {
+      console.log(res);
+
+      let currentStepString = "#step_" + currentStep;
+      let nextStep = parseInt(currentStep) + 1;
+      let nextStepString = "#step_" + nextStep;
+      if(currentStep === 1) {
+        $("#step_0").hide();
+      }
+      $(currentStepString).hide();
+      $(nextStepString).show();
+
+
+    })
   }
 
   render() {
     const { assignedDay, isDisabled, isEmpty } = this.state;
     const { dueDay, dueDisabled, dueEmpty } = this.state;
+    const { returnDay, returnDisabled, returnEmpty } = this.state;
 
     return (
-        <div>
+        <div className="container">
           <h1>Assignment Blueprint Tool – Plan Your Assignment!</h1>
           <h2 className="mb-5">{this.state.assignmentTitle}</h2>
-          <p>Use this planning tool to develop a WCF strategy and timeline for a specific assignment.</p>
-          <p>This tool will help you to:</p>
+          <div id="step_0">
+            <p>Use this planning tool to develop a WCF strategy and timeline for a specific assignment.</p>
+            <p>This tool will help you to:</p>
             <ul>
               <li>
               Breakdown an assignment into several integrated deadlines that support your WCF strategy
@@ -74,16 +113,17 @@ class Tool1 extends Component {
               Tailor a detailed WCF strategy to this assignment that includes the error categories you will be targeting and the specific method you will use to annotate these errors
               </li>
             </ul>
-          <p>Before using this tool, you’ll need:</p>
+            <p>Before using this tool, you’ll need:</p>
             <ul>
               <li>
               A general sense of the learning outcomes, requirements, and approximate deadline of a writing assignment students will have to prepare for your course
               </li>
             </ul>
+          </div>
           <div id="step_1">
             <h5>Step 1: Assignment Flowchart</h5>
             <p>Enter date the assignment will be distributed to students:</p>
-            <div className="mb-5">
+            <div className="mb-3">
             <DayPickerInput
               value={assignedDay}
               onDayChange={this.handleDayChange}
@@ -96,12 +136,25 @@ class Tool1 extends Component {
             />
           </div>
           <p>Enter date the assignment will be due from students:</p>
-            <div className="mb-5">
+            <div className="mb-3">
             <DayPickerInput
               value={dueDay}
               onDayChange={this.handleDueDayChange}
               dayPickerProps={{
                 assignedDays: dueDay,
+                disabledDays: {
+                  daysOfWeek: [0, 6],
+                },
+              }}
+            />
+          </div>
+          <p>Enter date you anticipate returning the graded assignment to students:</p>
+            <div className="mb-3">
+            <DayPickerInput
+              value={returnDay}
+              onDayChange={this.handleReturnDayChange}
+              dayPickerProps={{
+                assignedDays: returnDay,
                 disabledDays: {
                   daysOfWeek: [0, 6],
                 },
@@ -135,7 +188,11 @@ class Tool1 extends Component {
                   </tr>
                   <tr className="d-flex">
                     <th scope="row" className="col-6">Expected Date to Return Corrected Work to Students</th>
-                    <td className="col-6"></td>
+                    <td className="col-6">
+                    {returnDay &&
+                    !returnDisabled &&
+                    `${returnDay.toLocaleDateString()}`}
+                    </td>
                   </tr>
                 </tbody>
               </table>
