@@ -50,7 +50,7 @@ class Assignment extends Component {
 
   render() {
     return (
-        <div>
+        <div className="container">
           <h1>{this.state.assignmentTitle}</h1>
           <h3>{this.state.classTitle}</h3>
           <p>{this.state.assignmentDescription}</p>
