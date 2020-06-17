@@ -427,7 +427,7 @@ class Tool1 extends Component {
                 </tr>
               </tbody>
             </table>
-            <p>When will this be done? </p>              
+            <p>When will this be done?</p>              
             <DayPickerInput
               value={expectationsDay}
               onDayChange={this.handleExpectationsDayChange}
@@ -443,6 +443,49 @@ class Tool1 extends Component {
           <div className="initiallyHidden" id="step_5">
             <h5>Step 5: Determine What Learners Will Have to Do In Response to Your WCF Strategy</h5>
             <p>Select one or several tasks that learners will have to complete after receiving your WCF.</p>
+            <h6 className="mt-5">Possible Student Responses to Instructor WCF</h6>
+            <table className="table">
+              <thead className="thead-light">
+                <tr className="d-flex">
+                  <th scope="col" className="col-6">Direct Feedback</th>
+                  <th scope="col" className="col-6">Indirect Feedback</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="d-flex">
+                  <td scope="row" className="col-6">
+                    <p>Personal log of frequency of errors by type</p>
+                  </td>
+                  <td className="col-6">
+                    <p>Personal log of frequency of errors by type</p>
+                  </td>
+                </tr>
+                <tr className="d-flex">
+                  <td scope="row" className="col-6">
+                    <p>Revise text based on <strong>instructor corrections</strong></p>
+                  </td>
+                  <td className="col-6">
+                  <p>Revise text based on <strong>self-correction</strong></p>
+                  </td>
+                </tr>
+                <tr className="d-flex">
+                  <td scope="row" className="col-6">
+                    <p>Personal reflection on errors</p>
+                  </td>
+                  <td className="col-6">
+                    <p>Personal reflection on errors</p>
+                  </td>
+                </tr>
+                <tr className="d-flex">
+                  <td scope="row" className="col-6">
+                    <p>Other assignment based on errors</p>
+                  </td>
+                  <td className="col-6">
+                    <p>Other assignment based on errors</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div className="initiallyHidden" id="step_6">
             <h5>Step 6: Peer WCF (Optional) </h5>
