@@ -7,17 +7,35 @@ class Assignment extends Component {
   constructor(props) {
     super(props);
 
+    if(this.props.location.state) {
+      console.log("there is data passed through props");
+      console.log(this.props.location);
+    } else {
+      console.log("no data passed through props");
+    }
     // check if this exists -- if not do database calls in componentDidMount to get the info
     console.log(this.props.location.state);
 
-    this.state = {
-      uid: this.props.location.state.uid,
-      classId: this.props.location.state.classId,
-      classTitle: this.props.location.state.classTitle,
-      assignmentId: this.props.location.state.assignmentId,
-      assignmentTitle: this.props.location.state.assignmentTitle,
-      assignmentDescription: ""
+    if(this.props.location.state) {
+      this.state = {
+        uid: this.props.location.state.uid,
+        classId: this.props.location.state.classId,
+        classTitle: this.props.location.state.classTitle,
+        assignmentId: this.props.location.state.assignmentId,
+        assignmentTitle: this.props.location.state.assignmentTitle,
+        assignmentDescription: ""
+      }
+    } else {
+      this.state = {
+        uid: null,
+        classId: null,
+        classTitle: null,
+        assignmentId: null,
+        assignmentTitle: null,
+        assignmentDescription: ""        
+      }
     }
+
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.goToTool = this.goToTool.bind(this);
