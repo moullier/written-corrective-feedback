@@ -40,11 +40,13 @@ class Dashboard extends Component {
       Axios.get("/api/course_list/" + this.state.uid)
       .then((course_data) => {
         console.log(course_data.data);
+
+        this.setState({
+          classList: data.data,
+          previousCourseList: course_data.data
+        });
       })
-      this.setState({
-        classList: data.data,
-        previousCourseList: course_data.data
-      });
+
     });
   }
 

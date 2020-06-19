@@ -80,19 +80,28 @@ module.exports = function (app) {
 
   // GET ROUTES
 
+
+// get all classes that belong to a specific user
 app.get("/api/class_list/:id", function (req, res) {
   let userId = req.params.id;
 
   console.log("userId in /api/class_list = " + userId);
   
-  db.ClassList.findAll({
+  db.Course.findAll({
+    include: [
+      {
+        model: db.ClassList
+      }
+    ],
     where: {
       UserId: userId
     }
   }).then(function(dbClassList) {
+    console.log(dbClassList);
     res.json(dbClassList);
   })
 })
+
 
 // get all courses that belong to a specific user
 app.get("/api/course_list/:uid", function (req, res) {

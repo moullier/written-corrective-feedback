@@ -15,8 +15,6 @@ module.exports = function(sequelize, DataTypes) {
     };
 
     Course.associate = function(models) {
-        // Associating Assigment with ClassList
-        // When a ClassList is deleted, also delete any associated Assigments
         Course.hasMany(models.ClassList, {
           onDelete: "cascade"
         });
