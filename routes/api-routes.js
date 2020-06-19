@@ -94,6 +94,21 @@ app.get("/api/class_list/:id", function (req, res) {
   })
 })
 
+// get all courses that belong to a specific user
+app.get("/api/course_list/:uid", function (req, res) {
+  let userId = req.params.uid;
+
+  console.log("userId in /api/course_list = " + userId);
+  
+  db.Course.findAll({
+    where: {
+      UserId: userId
+    }
+  }).then(function(dbCourse) {
+    res.json(dbCourse);
+  })
+})
+
 
 // get all assignments for a specific given class
 app.get("/api/assignment_list/:id", function (req, res) {

@@ -9,13 +9,22 @@ class Home extends Component {
     super(props);
 
     this.onLoginClick = this.onLoginClick.bind(this);
+    this.onSignupClick = this.onSignupClick.bind(this);
   }
 
+  // load login page
   onLoginClick() {
     this.props.history.push({
       pathname: '/login'
     });
     window.location.reload();
+  }
+
+  // load signup page
+  onSignupClick() {
+    this.props.history.push({
+      pathname: "/signup"
+    });
   }
 
   render() {
@@ -36,7 +45,7 @@ class Home extends Component {
                   <p className="mb-5">Providing written corrective feedback in the second language classroom</p>
                   <div className="input-group input-group-newsletter">
                       <button className="btn btn-secondary mr-5" type="button" onClick={this.onLoginClick}>Login</button>
-                      <button className="btn btn-secondary" type="button">Sign Up</button>
+                      <button className="btn btn-secondary" type="button" onClick={this.onSignupClick}>Sign Up</button>
                   </div>
                 </div>
               </div>

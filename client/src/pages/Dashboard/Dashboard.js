@@ -20,7 +20,8 @@ class Dashboard extends Component {
       institution: "",
       classList: [],
       newClassName: "",
-      newClassPeriod: "Select Class Period"
+      newClassPeriod: "Select Class Period",
+      previousCourseList: []
     };
 
     // ES6 React.Component doesn't auto bind methods to itself
@@ -36,7 +37,14 @@ class Dashboard extends Component {
     Axios.get("/api/class_list/" + this.state.uid)
     .then((data) => {
       console.log(data.data);
-      this.setState({classList: data.data});
+      Axios.get("/api/course_list/" + this.state.uid)
+      .then((course_data) => {
+        console.log(course_data.data);
+      })
+      this.setState({
+        classList: data.data,
+        previousCourseList: course_data.data
+      });
     });
   }
 
