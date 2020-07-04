@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import "../../App.css";
 import Axios from "axios";
-import 'bootstrap';
+// import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+//import 'bootstrap/dist/js/bootstrap.bundle';
 import $ from 'jquery';
-import Popper from 'popper.js';
+//import Popper from 'popper.js';
 import 'bootstrap/js/dist/dropdown';
 
 class Dashboard extends Component {
@@ -21,6 +22,7 @@ class Dashboard extends Component {
       classList: [],
       newClassName: "",
       newClassPeriod: "Select Class Period",
+      existingCourseDropdown: "Select Existing Course",
       previousCourseList: []
     };
 
@@ -158,19 +160,21 @@ class Dashboard extends Component {
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                <label htmlFor="dropdownCourses">Create New Section of Existing Course:</label>
-                <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle mb-4" type="button" id="dropdownCourses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      {this.state.newClassPeriod}
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <button className="dropdown-item" id="Spring 2020" type="button" onClick={this.selectTimeFrame}>Spring 2020</button>
-                      <button className="dropdown-item" id="Summer 2020" type="button" onClick={this.selectTimeFrame}>Summer 2020</button>
-                      <button className="dropdown-item" id="Fall 2020" type="button" onClick={this.selectTimeFrame}>Fall 2020</button>
-                      <button className="dropdown-item" id="Academic Year 19-20" type="button" onClick={this.selectTimeFrame}>Academic Year 19-20</button>
-                      <button className="dropdown-item" id="Academic Year 20-21" type="button" onClick={this.selectTimeFrame}>Academic Year 20-21</button>
+                {this.state.previousCourseList.length > 0 ? 
+                <div>
+                  <label htmlFor="dropdownCourses">Create New Section of Existing Course:</label>
+                  <div className="dropdown">
+                      <button className="btn btn-secondary dropdown-toggle mb-4" type="button" id="dropdownCourses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {this.state.existingCourseDropdown}
+                      </button>
+                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {this.state.previousCourseList.map((el) => (
+                          <button className="dropdown-item" id={el.name} type="button" onClick={this.selectTimeFrame}>{el.name}</button>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                   : ""}
                   <label htmlFor="inputClassName">Or Enter New Course Name</label>
                   <input
                     type="text" 

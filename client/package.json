@@ -4,6 +4,9 @@
   "private": true,
   "proxy": "http://localhost:3001/",
   "dependencies": {
+    "bootstrap": "^4.5.0",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
     "react": "^16.6.3",
     "react-day-picker": "^7.4.8",
     "react-dom": "^16.6.3",
