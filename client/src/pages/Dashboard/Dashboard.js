@@ -158,7 +158,20 @@ class Dashboard extends Component {
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                  <label htmlFor="inputClassName">Class Name</label>
+                <label htmlFor="dropdownCourses">Create New Section of Existing Course:</label>
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle mb-4" type="button" id="dropdownCourses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {this.state.newClassPeriod}
+                    </button>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <button className="dropdown-item" id="Spring 2020" type="button" onClick={this.selectTimeFrame}>Spring 2020</button>
+                      <button className="dropdown-item" id="Summer 2020" type="button" onClick={this.selectTimeFrame}>Summer 2020</button>
+                      <button className="dropdown-item" id="Fall 2020" type="button" onClick={this.selectTimeFrame}>Fall 2020</button>
+                      <button className="dropdown-item" id="Academic Year 19-20" type="button" onClick={this.selectTimeFrame}>Academic Year 19-20</button>
+                      <button className="dropdown-item" id="Academic Year 20-21" type="button" onClick={this.selectTimeFrame}>Academic Year 20-21</button>
+                    </div>
+                  </div>
+                  <label htmlFor="inputClassName">Or Enter New Course Name</label>
                   <input
                     type="text" 
                     className="form-control mb-4"
