@@ -23,7 +23,8 @@ class Dashboard extends Component {
       newClassName: "",
       newClassPeriod: "Select Class Period",
       existingCourseDropdown: "Select Existing Course",
-      previousCourseList: []
+      previousCourseList: [],
+      successfulLoad: false
     };
 
     // ES6 React.Component doesn't auto bind methods to itself
@@ -32,6 +33,7 @@ class Dashboard extends Component {
     this.createNewClass = this.createNewClass.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.goToClassPage = this.goToClassPage.bind(this);
+    this.selectCourse = this.selectCourse.bind(this);
     
   }
 
@@ -45,7 +47,8 @@ class Dashboard extends Component {
 
         this.setState({
           classList: data.data,
-          previousCourseList: course_data.data
+          previousCourseList: course_data.data,
+          successfulLoad: true
         });
       })
 
@@ -113,6 +116,15 @@ class Dashboard extends Component {
     this.setState({newClassPeriod: e.target.id});
   }
 
+  selectCourse(e) {
+    e.preventDefault();
+    console.log(e.target.value);
+    $("#inputClassName").hide();
+    $("#orSpan").hide();
+    $("#inputClassLabel").hide();
+    this.setState({existingCourseDropdown: e.target.value});
+  }
+
   render() {
     // console.log("Total Width:");
     // console.log(window.screen.width);
@@ -138,16 +150,22 @@ class Dashboard extends Component {
         {mapStatement}
         <button className="btn btn-secondary" data-toggle="modal" data-target="#addClassModal">Create New Class</button>
         </div>
-    } else {
+    } else if(this.state.successfulLoad) {
       pageToRender = <div>
         <h3>No Classes Created Yet</h3>
         <h6>Enter a Class to Create Assignments</h6>
         <img className="mb-4" src={"../../../assets/images/check.png"} alt="checkmark icon" width="72" height="72" />
         <button className="btn btn-secondary" data-toggle="modal" data-target="#addClassModal">Create New Class</button>
       </div>
+    } else {
+      pageToRender = <div className="container d-flex justify-content-center">
+        <div className="spinner-border m-5" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>;
     }
     return (
-      <div id="mainDiv">
+      <div className="Dashboard" id="mainDiv">
         {pageToRender}
         <div className="modal" id="addClassModal" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
@@ -169,13 +187,14 @@ class Dashboard extends Component {
                       </button>
                       <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         {this.state.previousCourseList.map((el) => (
-                          <button className="dropdown-item" id={el.name} type="button" onClick={this.selectTimeFrame}>{el.name}</button>
+                          <button className="dropdown-item" value={el.name} type="button" onClick={this.selectCourse}>{el.name}</button>
                         ))}
                       </div>
                     </div>
+                    <span id="orSpan">OR</span>
                   </div>
                    : ""}
-                  <label htmlFor="inputClassName">Or Enter New Course Name</label>
+                  <label id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
                   <input
                     type="text" 
                     className="form-control mb-4"
