@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-import "../../App.css";
 import Axios from "axios";
-// import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
-//import 'bootstrap/dist/js/bootstrap.bundle';
+import 'bootstrap/dist/css/bootstrap.css';
 import $ from 'jquery';
-//import Popper from 'popper.js';
-import 'bootstrap/js/dist/dropdown';
+import Dropdown from 'react-bootstrap/Dropdown';
+import "../../App.css";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -118,11 +115,12 @@ class Dashboard extends Component {
 
   selectCourse(e) {
     e.preventDefault();
-    console.log(e.target.value);
+    // console.log(e.target);
+    // console.log(e.target.id);
     $("#inputClassName").hide();
     $("#orSpan").hide();
     $("#inputClassLabel").hide();
-    this.setState({existingCourseDropdown: e.target.value});
+    this.setState({existingCourseDropdown: e.target.id});
   }
 
   render() {
@@ -144,7 +142,7 @@ class Dashboard extends Component {
         </div>
       </div>));
     
-    if(this.state.classList.length != 0) {
+    if(this.state.classList.length !== 0) {
       pageToRender = <div className="container">
         <h3>Active Classes:</h3>
         {mapStatement}
@@ -167,6 +165,7 @@ class Dashboard extends Component {
     return (
       <div className="Dashboard" id="mainDiv">
         {pageToRender}
+
         <div className="modal" id="addClassModal" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -181,19 +180,20 @@ class Dashboard extends Component {
                 {this.state.previousCourseList.length > 0 ? 
                 <div>
                   <label htmlFor="dropdownCourses">Create New Section of Existing Course:</label>
-                  <div className="dropdown">
-                      <button className="btn btn-secondary dropdown-toggle mb-4" type="button" id="dropdownCourses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {this.state.existingCourseDropdown}
-                      </button>
-                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {this.state.previousCourseList.map((el) => (
-                          <button className="dropdown-item" value={el.name} type="button" onClick={this.selectCourse}>{el.name}</button>
-                        ))}
-                      </div>
-                    </div>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="secondary" id="dropdownCourses">
+                    {this.state.existingCourseDropdown}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      {this.state.previousCourseList.map((el, idx) => (
+                        <Dropdown.Item id={el.name} key={idx} onClick={this.selectCourse}>{el.name}</Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
                     <span id="orSpan">OR</span>
-                  </div>
-                   : ""}
+                </div>
+                : ""}
                   <label id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
                   <input
                     type="text" 

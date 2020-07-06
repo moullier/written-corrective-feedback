@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "../../App.css";
+// import "../../App.css";
 import Axios from "axios";
-import $ from "jquery";
+// import $ from "jquery";
 
 class Assignment extends Component {
   constructor(props) {

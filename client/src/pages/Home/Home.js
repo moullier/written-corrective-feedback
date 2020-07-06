@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../../App.css";
+// import "../../App.css";
 import "./Home.css";
 import video from "./mp4/bg.mp4";
 

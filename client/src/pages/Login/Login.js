@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import "../../App.css";
+// import "../../App.css";
 import "./Login.css";
 import $ from "jquery";
 
