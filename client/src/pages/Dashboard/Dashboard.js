@@ -117,9 +117,9 @@ class Dashboard extends Component {
     e.preventDefault();
     // console.log(e.target);
     // console.log(e.target.id);
-    $("#inputClassName").hide();
-    $("#orSpan").hide();
-    $("#inputClassLabel").hide();
+    // $("#inputClassName").hide();
+    // $("#orSpan").hide();
+    // $("#inputClassLabel").hide();
     this.setState({existingCourseDropdown: e.target.id});
   }
 
@@ -202,18 +202,19 @@ class Dashboard extends Component {
                     placeholder="Enter Class Name"
                     onChange={this.handleChange}
                   />
-                  <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      {this.state.newClassPeriod}
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <button className="dropdown-item" id="Spring 2020" type="button" onClick={this.selectTimeFrame}>Spring 2020</button>
-                      <button className="dropdown-item" id="Summer 2020" type="button" onClick={this.selectTimeFrame}>Summer 2020</button>
-                      <button className="dropdown-item" id="Fall 2020" type="button" onClick={this.selectTimeFrame}>Fall 2020</button>
-                      <button className="dropdown-item" id="Academic Year 19-20" type="button" onClick={this.selectTimeFrame}>Academic Year 19-20</button>
-                      <button className="dropdown-item" id="Academic Year 20-21" type="button" onClick={this.selectTimeFrame}>Academic Year 20-21</button>
-                    </div>
-                  </div>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="secondary" id="dropdownCourses">
+                    {this.state.newClassPeriod}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item id="Spring 2020" onClick={this.selectTimeFrame}>Spring 2020</Dropdown.Item>
+                      <Dropdown.Item id="Summer 2020" onClick={this.selectTimeFrame}>Summer 2020</Dropdown.Item>
+                      <Dropdown.Item id="Fall 2020" onClick={this.selectTimeFrame}>Fall 2020</Dropdown.Item>
+                      <Dropdown.Item id="Academic Year 19-20" onClick={this.selectTimeFrame}>Academic Year 19-20</Dropdown.Item>
+                      <Dropdown.Item id="Academic Year 20-21" onClick={this.selectTimeFrame}>Academic Year 20-21</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
                 <span id="noPeriod" className="initiallyHidden text-center">Select a Time Period for the Class</span>
                 <span id="noClass" className="initiallyHidden text-center">Enter a Class Name</span>
