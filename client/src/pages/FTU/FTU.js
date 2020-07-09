@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import "../../App.css";
 import "./FTU.css"
 import Axios from "axios";
-import { Link, Redirect } from "react-router-dom";
-import $ from "jquery";
+import { Link } from "react-router-dom";
 
 class FTU extends Component {
   constructor(props) {
@@ -21,6 +20,7 @@ class FTU extends Component {
         .then((data) => {
             console.log(data);
             this.setState({uid: data.data.id});
+            // then set user's FTU property to false
         })
     }
 
