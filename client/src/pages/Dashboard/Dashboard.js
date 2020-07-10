@@ -6,6 +6,9 @@ import $ from 'jquery';
 import Dropdown from 'react-bootstrap/Dropdown';
 import "../../App.css";
 
+
+
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +24,8 @@ class Dashboard extends Component {
       newClassPeriod: "Select Class Period",
       existingCourseDropdown: "Select Existing Course",
       previousCourseList: [],
-      successfulLoad: false
+      successfulLoad: false,
+      modalStep: 0
     };
 
     // ES6 React.Component doesn't auto bind methods to itself
@@ -31,6 +35,7 @@ class Dashboard extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.goToClassPage = this.goToClassPage.bind(this);
     this.selectCourse = this.selectCourse.bind(this);
+    this.showNewCourseInput = this.showNewCourseInput.bind(this);
     
   }
 
@@ -115,15 +120,33 @@ class Dashboard extends Component {
 
   selectCourse(e) {
     e.preventDefault();
-    // console.log(e.target);
-    // console.log(e.target.id);
-    // $("#inputClassName").hide();
-    // $("#orSpan").hide();
-    // $("#inputClassLabel").hide();
-    this.setState({existingCourseDropdown: e.target.id});
+    $("#inputClassName").show();
+    $("#inputClassLabel").show();
+    this.setState({
+      existingCourseDropdown: e.target.id,
+      modalStep: 0
+    });
+  }
+
+  showNewCourseInput() {
+    $("#inputClassName").show();
+    $("#inputClassLabel").show();
+    this.setState({
+      modalStep: 1
+    });
   }
 
   render() {
+    // hide certain input fields initially
+    if(this.state.modalStep == 0) {
+      $("#inputClassName").hide();
+      $("#inputClassLabel").hide();
+      $("#timePeriodDropdown").hide();
+    } else if (this.state.modalStep == 1) {
+
+    }
+
+
     // console.log("Total Width:");
     // console.log(window.screen.width);
     let pageToRender = "";
@@ -186,12 +209,12 @@ class Dashboard extends Component {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
+                      <Dropdown.Item id="addNewCourseButton" onClick={this.showNewCourseInput}>Add New Course</Dropdown.Item>
                       {this.state.previousCourseList.map((el, idx) => (
                         <Dropdown.Item id={el.name} key={idx} onClick={this.selectCourse}>{el.name}</Dropdown.Item>
                       ))}
                     </Dropdown.Menu>
                   </Dropdown>
-                    <span id="orSpan">OR</span>
                 </div>
                 : ""}
                   <label id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
@@ -202,19 +225,21 @@ class Dashboard extends Component {
                     placeholder="Enter Class Name"
                     onChange={this.handleChange}
                   />
-                  <Dropdown>
-                    <Dropdown.Toggle variant="secondary" id="dropdownCourses">
-                    {this.state.newClassPeriod}
-                    </Dropdown.Toggle>
+                  <div id="timePeriodDropdown">
+                    <Dropdown>
+                      <Dropdown.Toggle variant="secondary" id="dropdownCourses">
+                      {this.state.newClassPeriod}
+                      </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                      <Dropdown.Item id="Spring 2020" onClick={this.selectTimeFrame}>Spring 2020</Dropdown.Item>
-                      <Dropdown.Item id="Summer 2020" onClick={this.selectTimeFrame}>Summer 2020</Dropdown.Item>
-                      <Dropdown.Item id="Fall 2020" onClick={this.selectTimeFrame}>Fall 2020</Dropdown.Item>
-                      <Dropdown.Item id="Academic Year 19-20" onClick={this.selectTimeFrame}>Academic Year 19-20</Dropdown.Item>
-                      <Dropdown.Item id="Academic Year 20-21" onClick={this.selectTimeFrame}>Academic Year 20-21</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                      <Dropdown.Menu>
+                        <Dropdown.Item id="Spring 2020" onClick={this.selectTimeFrame}>Spring 2020</Dropdown.Item>
+                        <Dropdown.Item id="Summer 2020" onClick={this.selectTimeFrame}>Summer 2020</Dropdown.Item>
+                        <Dropdown.Item id="Fall 2020" onClick={this.selectTimeFrame}>Fall 2020</Dropdown.Item>
+                        <Dropdown.Item id="Academic Year 19-20" onClick={this.selectTimeFrame}>Academic Year 19-20</Dropdown.Item>
+                        <Dropdown.Item id="Academic Year 20-21" onClick={this.selectTimeFrame}>Academic Year 20-21</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
                 </div>
                 <span id="noPeriod" className="initiallyHidden text-center">Select a Time Period for the Class</span>
                 <span id="noClass" className="initiallyHidden text-center">Enter a Class Name</span>
