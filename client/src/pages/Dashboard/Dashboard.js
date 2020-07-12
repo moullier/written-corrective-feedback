@@ -25,7 +25,8 @@ class Dashboard extends Component {
       existingCourseDropdown: "Select Existing Course",
       previousCourseList: [],
       successfulLoad: false,
-      modalStep: 0
+      modalStep: 0,
+      newCourse: false
     };
 
     // ES6 React.Component doesn't auto bind methods to itself
@@ -36,6 +37,8 @@ class Dashboard extends Component {
     this.goToClassPage = this.goToClassPage.bind(this);
     this.selectCourse = this.selectCourse.bind(this);
     this.showNewCourseInput = this.showNewCourseInput.bind(this);
+    this.moveToNextStep = this.moveToNextStep.bind(this);
+    this.resetModal = this.resetModal.bind(this);
     
   }
 
@@ -62,30 +65,50 @@ class Dashboard extends Component {
   createNewClass(e) {
     e.preventDefault();
     // console.log("attempt createNewClass");
-    if(this.state.newClassName !== "") {
-      if(this.state.newClassPeriod !== "Select Class Period") {
-        console.log("add new class to database");
-        Axios.post("/api/new_class/" + this.state.uid, {
-          className: this.state.newClassName,
-          classPeriod: this.state.newClassPeriod
-        })
-        .then((data) => {
-          console.log(data);
-          Axios.get("/api/class_list/" + this.state.uid)
-          .then((result_data) => {
-            console.log(result_data.data);
-            this.setState({classList: result_data.data}, () => {
-              $("#addClassModal").modal('hide')
-            });
-          });
+    if(this.state.newCourse) {
+      console.log("add new course to database");
+      Axios.post("/api/new_course/" + this.state.uid, {
+        courseName: this.state.newClassName
+      })
+      .then((data) => {
+        console.log(data);
 
-        })
-      } else {
-        $("#noPeriod").show();
-      }
+        this.setState({classList: result_data.data}, () => {
+          $("#addClassModal").modal('hide')
+        });
+
+      });
+
+
+
     } else {
-      $("#noClass").show();
+
     }
+
+    // if(this.state.newClassName !== "") {
+    //   if(this.state.newClassPeriod !== "Select Class Period") {
+    //     console.log("add new class to database");
+    //     Axios.post("/api/new_class/" + this.state.uid, {
+    //       className: this.state.newClassName,
+    //       classPeriod: this.state.newClassPeriod
+    //     })
+    //     .then((data) => {
+    //       console.log(data);
+    //       Axios.get("/api/class_list/" + this.state.uid)
+    //       .then((result_data) => {
+    //         console.log(result_data.data);
+            // this.setState({classList: result_data.data}, () => {
+            //   $("#addClassModal").modal('hide')
+            // });
+    //       });
+
+    //     })
+    //   } else {
+    //     $("#noPeriod").show();
+    //   }
+    // } else {
+    //   $("#noClass").show();
+    // }
   }
 
   clearNewClass(e) {
@@ -118,30 +141,79 @@ class Dashboard extends Component {
     this.setState({newClassPeriod: e.target.id});
   }
 
+  // when user picks an existing course from the list of previous courses
   selectCourse(e) {
     e.preventDefault();
-    $("#inputClassName").show();
-    $("#inputClassLabel").show();
+
     this.setState({
       existingCourseDropdown: e.target.id,
-      modalStep: 0
+      modalStep: 0,
+      newCourse: false
     });
   }
 
+  // when user picks "Add New Course"
   showNewCourseInput() {
     $("#inputClassName").show();
     $("#inputClassLabel").show();
     this.setState({
-      modalStep: 1
+      modalStep: 1,
+      existingCourseDropdown: "Add New Course",
+      newCourse: true
     });
+  }
+
+  moveToNextStep() {
+    if(this.state.newCourse && this.state.newClassName.length > 0) {
+      $("#courseDropdown").hide();
+      $("#inputClassName").hide();
+      $("#inputClassLabel").hide();
+      $(".next-back").hide();
+      $("#timePeriodDropdown").show();
+      $(".modal-footer").show();
+
+      this.setState({
+        modalStep: 2
+      })
+    } else if (this.state.newCourse) {
+      $("#noClass").show();
+    } else if(!this.state.newCourse && (this.state.existingCourseDropdown !== "Select Existing Course")
+      && (this.state.existingCourseDropdown !== "Add New Course")) {
+      $("#courseDropdown").hide();
+      $("#inputClassName").hide();
+      $("#inputClassLabel").hide();
+      $(".next-back").hide();
+      $("#timePeriodDropdown").show();
+      $(".modal-footer").show();
+      
+      this.setState({
+        modalStep: 2
+      })
+    }
+
+
+  }
+
+  // when closing modal, reset all the relevant parts of state
+  resetModal() {
+    $("#noClass").hide();
+    this.setState({
+      modalStep: 0,
+      newClassPeriod: "Select Class Period",
+      existingCourseDropdown: "Select Existing Course",
+      newCourse: false
+    })
   }
 
   render() {
     // hide certain input fields initially
-    if(this.state.modalStep == 0) {
+    if(this.state.modalStep === 0 && this.state.classList.length !== 0) {
       $("#inputClassName").hide();
       $("#inputClassLabel").hide();
       $("#timePeriodDropdown").hide();
+      $(".modal-footer").hide();
+    } else if (this.state.modalStep === 0) {
+
     } else if (this.state.modalStep == 1) {
 
     }
@@ -201,7 +273,7 @@ class Dashboard extends Component {
               <div className="modal-body">
                 <div className="form-group">
                 {this.state.previousCourseList.length > 0 ? 
-                <div>
+                <div id="courseDropdown">
                   <label htmlFor="dropdownCourses">Create New Section of Existing Course:</label>
                   <Dropdown>
                     <Dropdown.Toggle variant="secondary" id="dropdownCourses">
@@ -217,7 +289,7 @@ class Dashboard extends Component {
                   </Dropdown>
                 </div>
                 : ""}
-                  <label id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
+                  <label className="mt-3" id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
                   <input
                     type="text" 
                     className="form-control mb-4"
@@ -242,11 +314,14 @@ class Dashboard extends Component {
                   </div>
                 </div>
                 <span id="noPeriod" className="initiallyHidden text-center">Select a Time Period for the Class</span>
-                <span id="noClass" className="initiallyHidden text-center">Enter a Class Name</span>
+                <div id="noClass" className="initiallyHidden text-center alert alert-danger" role="alert">Enter a Class Name</div>
+              </div>
+              <div className="next-back">
+                <button className="btn btn-link float-right" onClick={this.moveToNextStep}>Next Step</button>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary" onClick={this.createNewClass}>Save changes</button>
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-secondary" onClick={this.resetModal} data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
