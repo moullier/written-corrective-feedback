@@ -23,6 +23,7 @@ class Dashboard extends Component {
       newClassName: "",
       newClassPeriod: "Select Class Period",
       existingCourseDropdown: "Select Existing Course",
+      existingCourseID: null,
       previousCourseList: [],
       successfulLoad: false,
       modalStep: 0,
@@ -33,7 +34,7 @@ class Dashboard extends Component {
     // Need to bind them manually in constructor
     this.selectTimeFrame = this.selectTimeFrame.bind(this);
     this.createNewClass = this.createNewClass.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleClassNameChange = this.handleClassNameChange.bind(this);
     this.goToClassPage = this.goToClassPage.bind(this);
     this.selectCourse = this.selectCourse.bind(this);
     this.showNewCourseInput = this.showNewCourseInput.bind(this);
@@ -64,24 +65,42 @@ class Dashboard extends Component {
   // has been selected.  If so, add to database.
   createNewClass(e) {
     e.preventDefault();
-    // console.log("attempt createNewClass");
     if(this.state.newCourse) {
       console.log("add new course to database");
       Axios.post("/api/new_course/" + this.state.uid, {
         courseName: this.state.newClassName
       })
-      .then((data) => {
-        console.log(data);
+      .then((res_data) => {
+        
+        console.log(res_data);
+        console.log(this.state.newClassPeriod);
 
-        this.setState({classList: result_data.data}, () => {
-          $("#addClassModal").modal('hide')
-        });
+        Axios.post("/api/new_class/" + res_data.data.id, {
+          classPeriod: this.state.newClassPeriod
+        })
+        .then((res) => {
+          console.log(res.data);
+          let tempList = this.state.classList;
+
+          console.log(tempList);
+          
+          // this.setState({classList: result_data.data}, () => {
+          //   $("#addClassModal").modal('hide')
+          // });
+
+        })
+
 
       });
 
-
-
     } else {
+      // creating a new section of a prexisting course
+      console.log(this.state.existingCourseID);
+      console.log(this.state.newClassPeriod);
+
+      Axios.post("/api/new_class/" + this.state.existingCourseID, {
+        classPeriod: this.state.newClassPeriod
+      })
 
     }
 
@@ -126,7 +145,8 @@ class Dashboard extends Component {
     window.location.reload();
   }
 
-  handleChange(e) {
+
+  handleClassNameChange(e) {
     e.preventDefault();
     console.log(e.target.value);
     if(e.target.value !== "") {
@@ -142,11 +162,13 @@ class Dashboard extends Component {
   }
 
   // when user picks an existing course from the list of previous courses
-  selectCourse(e) {
-    e.preventDefault();
+  selectCourse(e, courseID) {
+
+    console.log(courseID);
 
     this.setState({
       existingCourseDropdown: e.target.id,
+      existingCourseID: courseID,
       modalStep: 0,
       newCourse: false
     });
@@ -159,7 +181,8 @@ class Dashboard extends Component {
     this.setState({
       modalStep: 1,
       existingCourseDropdown: "Add New Course",
-      newCourse: true
+      newCourse: true,
+      existingCourseID: null
     });
   }
 
@@ -201,6 +224,7 @@ class Dashboard extends Component {
       modalStep: 0,
       newClassPeriod: "Select Class Period",
       existingCourseDropdown: "Select Existing Course",
+      existingCourseID: null,
       newCourse: false
     })
   }
@@ -261,6 +285,7 @@ class Dashboard extends Component {
       <div className="Dashboard" id="mainDiv">
         {pageToRender}
 
+        {/* modal dialogue box */}
         <div className="modal" id="addClassModal" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -283,7 +308,8 @@ class Dashboard extends Component {
                     <Dropdown.Menu>
                       <Dropdown.Item id="addNewCourseButton" onClick={this.showNewCourseInput}>Add New Course</Dropdown.Item>
                       {this.state.previousCourseList.map((el, idx) => (
-                        <Dropdown.Item id={el.name} key={idx} onClick={this.selectCourse}>{el.name}</Dropdown.Item>
+                        <Dropdown.Item id={el.name} key={idx} onClick={(event) => this.selectCourse(event, el.id)}
+                        >{el.name}</Dropdown.Item>
                       ))}
                     </Dropdown.Menu>
                   </Dropdown>
@@ -295,7 +321,7 @@ class Dashboard extends Component {
                     className="form-control mb-4"
                     id="inputClassName"
                     placeholder="Enter Class Name"
-                    onChange={this.handleChange}
+                    onChange={this.handleClassNameChange}
                   />
                   <div id="timePeriodDropdown">
                     <Dropdown>
