@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import $ from 'jquery';
 import Dropdown from 'react-bootstrap/Dropdown';
 import "../../App.css";
+import DashboardClassList from "../../components/DashboardClassList";
 
 
 
@@ -49,11 +50,15 @@ class Dashboard extends Component {
       Axios.get("/api/course_list/" + this.state.uid)
       .then((course_data) => {
         console.log(course_data.data);
+        
+        let setNewCourse = !(course_data.data.length > 0);
+        console.log(setNewCourse);
 
         this.setState({
           classList: data.data,
           previousCourseList: course_data.data,
-          successfulLoad: true
+          successfulLoad: true,
+          newCourse: setNewCourse
         });
       })
     });
@@ -63,34 +68,35 @@ class Dashboard extends Component {
   // has been selected.  If so, add to database.
   createNewClass(e) {
     e.preventDefault();
+
+    // if we are creating a new course, need to add course and class section
     if(this.state.newCourse) {
+      // add new course to db
       console.log("add new course to database");
       Axios.post("/api/new_course/" + this.state.uid, {
         courseName: this.state.newClassName
       })
       .then((res_data) => {
         
-        console.log(res_data);
-        console.log(this.state.newClassPeriod);
+        // console.log(res_data);
+        // console.log(this.state.newClassPeriod);
 
+        // add new class section to db, linking course id
         Axios.post("/api/new_class/" + res_data.data.id, {
           classPeriod: this.state.newClassPeriod
         })
         .then((res) => {
-          console.log(res.data);
+          console.log(res_data.data);
           let tempList = this.state.classList;
 
+          tempList.push(res_data.data);
           console.log(tempList);
           
-          // this.setState({classList: result_data.data}, () => {
-          //   $("#addClassModal").modal('hide')
-          // });
-
+          this.setState({classList: tempList}, () => {
+            $("#addClassModal").modal('hide')
+          });
         })
-
-
       });
-
     } else {
       // creating a new section of a prexisting course
       console.log(this.state.existingCourseID);
@@ -98,6 +104,9 @@ class Dashboard extends Component {
 
       Axios.post("/api/new_class/" + this.state.existingCourseID, {
         classPeriod: this.state.newClassPeriod
+      })
+      .then((res_newClass) => {
+        console.log()
       })
 
     }
@@ -235,7 +244,7 @@ class Dashboard extends Component {
       $("#timePeriodDropdown").hide();
       $(".modal-footer").hide();
     } else if (this.state.modalStep === 0) {
-
+      $(".modal-footer").hide();
     } else if (this.state.modalStep == 1) {
 
     }
@@ -281,6 +290,7 @@ class Dashboard extends Component {
     }
     return (
       <div className="Dashboard" id="mainDiv">
+        <DashboardClassList />
         {pageToRender}
 
         {/* modal dialogue box */}
@@ -297,7 +307,7 @@ class Dashboard extends Component {
                 <div className="form-group">
                 {this.state.previousCourseList.length > 0 ? 
                 <div id="courseDropdown">
-                  <label htmlFor="dropdownCourses">Create New Section of Existing Course:</label>
+                  <label htmlFor="dropdownCourses">Choose Existing Course or Add New:</label>
                   <Dropdown>
                     <Dropdown.Toggle variant="secondary" id="dropdownCourses">
                     {this.state.existingCourseDropdown}

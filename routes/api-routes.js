@@ -150,16 +150,16 @@ app.get("/api/assignment/:id", function (req, res) {
 })
 
 
-// get info on a class when given the classId
-app.get("/api/class_name/:id", function (req, res) {
-  let classId = req.params.id;
+// get info on a course when given the courseId
+app.get("/api/course_name/:id", function (req, res) {
+  let courseId = req.params.id;
 
-  db.ClassList.findOne({
+  db.CourseList.findOne({
     where: {
-      id: classId
+      id: courseId
     }
-  }).then(function(dbClassName) {
-    res.json(dbClassName);
+  }).then(function(dbCourseList) {
+    res.json(dbCourseList);
   })
 })
 

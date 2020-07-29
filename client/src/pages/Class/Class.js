@@ -13,6 +13,7 @@ class Class extends Component {
     this.state = {
       uid: this.props.location.state.uid,
       classId: this.props.location.state.classId,
+      courseId: this.props.location.state.courseId,
       classTitle: "",
       assignmentList: [],
       newAssignmentTitle: "",
