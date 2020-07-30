@@ -167,10 +167,34 @@ app.get("/api/course_name/:id", function (req, res) {
 
   app.post("/api/new_class/:id", function (req, res) {
     console.log("The course id being modified is: " + req.params.id);
-    console.log("req.body.classPeriod" + req.body.classPeriod);
+    console.log("req.body.classPeriod " + req.body.classPeriod);
     
+    let timePeriodSort = -1;
+    switch(req.body.classPeriod) {
+      case "Spring 2020":
+        timePeriodSort = 0;
+        break;
+      case "Summer 2020":
+        timePeriodSort = 1;
+        break;
+      case "Fall 2020":
+        timePeriodSort = 2;
+        break;
+      case "Academic Year 19-20":
+        timePeriodSort = 3;
+        break;
+      case "Academic Year 20-21":
+        timePeriodSort = 4;
+        break;
+      default:
+        console.log("No matching time period found");
+        timePeriodSort = -1;
+    }
+
+
     db.ClassList.create({
-      time_period: req.body.classPeriod,
+      time_period_name: req.body.classPeriod,
+      time_period_sort: timePeriodSort,
       CourseId: req.params.id
     })
     .then(function (data) {

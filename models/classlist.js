@@ -1,8 +1,12 @@
 module.exports = function(sequelize, DataTypes) {
     let ClassList = sequelize.define("ClassList", {
-        time_period: {
+        time_period_name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
+        },
+        time_period_sort: {
+          type: DataTypes.INTEGER,
+          allowNull: false
         }
     });
 

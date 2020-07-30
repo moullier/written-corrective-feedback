@@ -14,10 +14,18 @@ class Dashboard extends Component {
     super(props);
 
     console.log("uid is:");
-    console.log(this.props.location.state.id);
+    console.log(this.props);
+    // console.log(this.props.location.state.id);
+
+    let userID = null;
+
+    if(this.props.location.state) {
+      userID = this.props.location.state.id;
+    }
+    console.log(userID);
 
     this.state = {
-      uid: this.props.location.state.id,
+      uid: userID,
       institution: "",
       classList: [],
       newClassName: "",
@@ -86,15 +94,25 @@ class Dashboard extends Component {
           classPeriod: this.state.newClassPeriod
         })
         .then((res) => {
-          console.log(res_data.data);
-          let tempList = this.state.classList;
+          // console.log(res_data.data);
+          // let tempList = this.state.classList;
 
-          tempList.push(res_data.data);
-          console.log(tempList);
+          // tempList.push(res_data.data);
+          // console.log(tempList);
           
-          this.setState({classList: tempList}, () => {
-            $("#addClassModal").modal('hide')
-          });
+          Axios.get("/api/class_list/" + this.state.uid)
+          .then((class_list_result) => {
+            console.log(class_list_result.data);
+            
+            // ******************
+            // need to update previous course list here (and maybe in the else too?  probably not)
+            this.setState({classList: class_list_result.data}, () => {
+              this.resetModal();
+              $("#addClassModal").modal('hide')
+            });
+          })
+
+
         })
       });
     } else {
@@ -106,9 +124,18 @@ class Dashboard extends Component {
         classPeriod: this.state.newClassPeriod
       })
       .then((res_newClass) => {
-        console.log()
-      })
+        console.log(res_newClass.data);
 
+        Axios.get("/api/class_list/" + this.state.uid)
+        .then((class_list_result) => {
+          console.log(class_list_result.data);
+          
+          this.setState({classList: class_list_result.data}, () => {
+            this.resetModal();
+            $("#addClassModal").modal('hide')
+          });
+        })
+      })
     }
 
     // if(this.state.newClassName !== "") {
@@ -176,7 +203,7 @@ class Dashboard extends Component {
     this.setState({
       existingCourseDropdown: e.target.id,
       existingCourseID: courseID,
-      modalStep: 0,
+      modalStep: 1,
       newCourse: false
     });
   }
@@ -226,7 +253,10 @@ class Dashboard extends Component {
 
   // when closing modal, reset all the relevant parts of state
   resetModal() {
+    console.log("resetting modal");
     $("#noClass").hide();
+    $("#courseDropdown").show();
+    $(".next-back").show();
     this.setState({
       modalStep: 0,
       newClassPeriod: "Select Class Period",
@@ -239,14 +269,17 @@ class Dashboard extends Component {
   render() {
     // hide certain input fields initially
     if(this.state.modalStep === 0 && this.state.classList.length !== 0) {
+      console.log("hit option 1");
       $("#inputClassName").hide();
       $("#inputClassLabel").hide();
       $("#timePeriodDropdown").hide();
       $(".modal-footer").hide();
     } else if (this.state.modalStep === 0) {
+      console.log("hit option 2");
       $(".modal-footer").hide();
-    } else if (this.state.modalStep == 1) {
-
+      $("#timePeriodDropdown").hide();
+    } else if (this.state.modalStep === 1) {
+      console.log("hit option 3");
     }
 
 
@@ -290,7 +323,7 @@ class Dashboard extends Component {
     }
     return (
       <div className="Dashboard" id="mainDiv">
-        <DashboardClassList />
+        <DashboardClassList classList={this.state.classList}/>
         {pageToRender}
 
         {/* modal dialogue box */}
@@ -322,7 +355,7 @@ class Dashboard extends Component {
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
-                : ""}
+                : "This isn't working for some reason!!!!"}
                   <label className="mt-3" id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
                   <input
                     type="text" 

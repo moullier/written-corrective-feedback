@@ -67,7 +67,7 @@ class Login extends Component {
             <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus onChange={this.handleChange}/>
             <label htmlFor="inputPassword" className="sr-only">Password</label>
             <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={this.handleChange}/>
-            <button className="btn btn-lg btn-main btn-block" type="submit" >Sign in</button>
+            <button className="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit" >Sign in</button>
             <p id="li-error"></p>
             <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
           </form>

@@ -22,6 +22,9 @@ class FTU extends Component {
             this.setState({uid: data.data.id});
             // then set user's FTU property to false
         })
+        .catch((err) => {
+            console.log("Error: No user logged in");
+        })
     }
 
     handleSubmit = (event) => {
@@ -52,7 +55,6 @@ class FTU extends Component {
 
     addNewInstitution(event) {
         event.preventDefault();
-
 
     }
 

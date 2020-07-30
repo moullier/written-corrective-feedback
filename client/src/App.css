@@ -38,9 +38,9 @@ h6 {
 
 
 .btn-primary { 
-  color: #ffffff; 
-  background-color: #199473; 
-  border-color: #014D40; 
+  color: #ffffff !important; 
+  background-color: #199473 !important; 
+  border-color: #014D40 !important; 
 } 
  
 .btn-main:hover, 
@@ -48,9 +48,9 @@ h6 {
 .btn-main:active, 
 .btn-main.active, 
 .open .dropdown-toggle.btn-main { 
-  color: #ffffff; 
-  background-color: #0C6B58; 
-  border-color: #014D40; 
+  color: #ffffff !important; 
+  background-color: #0C6B58 !important; 
+  border-color: #014D40 !important; 
 } 
  
 .btn-main:active, 
