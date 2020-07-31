@@ -188,6 +188,7 @@ app.get("/api/course_name/:id", function (req, res) {
         break;
       default:
         console.log("No matching time period found");
+        // maybe throw an error here?
         timePeriodSort = -1;
     }
 

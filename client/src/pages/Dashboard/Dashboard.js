@@ -79,42 +79,55 @@ class Dashboard extends Component {
 
     // if we are creating a new course, need to add course and class section
     if(this.state.newCourse) {
-      // add new course to db
-      console.log("add new course to database");
-      Axios.post("/api/new_course/" + this.state.uid, {
-        courseName: this.state.newClassName
-      })
-      .then((res_data) => {
-        
-        // console.log(res_data);
-        // console.log(this.state.newClassPeriod);
 
-        // add new class section to db, linking course id
-        Axios.post("/api/new_class/" + res_data.data.id, {
-          classPeriod: this.state.newClassPeriod
+      if(this.state.newClassPeriod !== "Select Class Period") {
+        // add new course to db
+        console.log("add new course to database");
+        Axios.post("/api/new_course/" + this.state.uid, {
+          courseName: this.state.newClassName
         })
-        .then((res) => {
-          // console.log(res_data.data);
-          // let tempList = this.state.classList;
-
-          // tempList.push(res_data.data);
-          // console.log(tempList);
+        .then((res_data) => {
           
-          Axios.get("/api/class_list/" + this.state.uid)
-          .then((class_list_result) => {
-            console.log(class_list_result.data);
-            
-            // ******************
-            // need to update previous course list here (and maybe in the else too?  probably not)
-            this.setState({classList: class_list_result.data}, () => {
-              this.resetModal();
-              $("#addClassModal").modal('hide')
-            });
+          // console.log(res_data);
+          // console.log(this.state.newClassPeriod);
+
+          // add new class section to db, linking course id
+          Axios.post("/api/new_class/" + res_data.data.id, {
+            classPeriod: this.state.newClassPeriod
           })
+          .then((res) => {
+            // console.log(res_data.data);
+            // let tempList = this.state.classList;
 
+            // tempList.push(res_data.data);
+            // console.log(tempList);
+            
+            Axios.get("/api/class_list/" + this.state.uid)
+            .then((class_list_result) => {
+              console.log(class_list_result.data);
+              
+              Axios.get("/api/course_list/" + this.state.uid)
+              .then((course_data) => {
+                
+                console.log(course_data.data);
 
-        })
-      });
+                this.setState({
+                  classList: class_list_result.data,
+                  previousCourseList: course_data.data
+                }, () => {
+                  this.resetModal();
+                  $("#addClassModal").modal('hide')
+                });
+              })
+            
+            })
+          })
+        });
+      } else {
+        // if no time period has been selected
+        $("#noPeriod").show();
+      }
+      
     } else {
       // creating a new section of a prexisting course
       console.log(this.state.existingCourseID);
@@ -257,12 +270,14 @@ class Dashboard extends Component {
     $("#noClass").hide();
     $("#courseDropdown").show();
     $(".next-back").show();
+    $("#inputClassName").val("");
     this.setState({
       modalStep: 0,
       newClassPeriod: "Select Class Period",
       existingCourseDropdown: "Select Existing Course",
       existingCourseID: null,
-      newCourse: false
+      newCourse: false,
+      newClassName: ""
     })
   }
 
@@ -303,6 +318,7 @@ class Dashboard extends Component {
     
     if(this.state.classList.length !== 0) {
       pageToRender = <div className="container">
+        <DashboardClassList classList={this.state.classList}/>
         <h3>Active Classes:</h3>
         {mapStatement}
         <button className="btn btn-secondary" data-toggle="modal" data-target="#addClassModal">Create New Class</button>
@@ -323,7 +339,7 @@ class Dashboard extends Component {
     }
     return (
       <div className="Dashboard" id="mainDiv">
-        <DashboardClassList classList={this.state.classList}/>
+
         {pageToRender}
 
         {/* modal dialogue box */}
@@ -355,7 +371,7 @@ class Dashboard extends Component {
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
-                : "This isn't working for some reason!!!!"}
+                : ""}
                   <label className="mt-3" id="inputClassLabel" htmlFor="inputClassName">Enter New Course Name</label>
                   <input
                     type="text" 
@@ -380,7 +396,7 @@ class Dashboard extends Component {
                     </Dropdown>
                   </div>
                 </div>
-                <span id="noPeriod" className="initiallyHidden text-center">Select a Time Period for the Class</span>
+                <div id="noPeriod" className="initiallyHidden text-center alert alert-danger" role="alert">Select a Time Period for the Class</div>
                 <div id="noClass" className="initiallyHidden text-center alert alert-danger" role="alert">Enter a Class Name</div>
               </div>
               <div className="next-back">
