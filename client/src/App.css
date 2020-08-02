@@ -8,6 +8,7 @@
 html, body, #root, .App {
   height: 100%;
   width: 100%;
+  background-color: #F0F4F8;
 }
 
 body{
@@ -36,6 +37,10 @@ h6 {
   width: 100%;
 }
 
+#assignmentsDiv {
+  background-color: #D9E2EC;
+}
+
 
 .btn-primary { 
   color: #ffffff !important; 
@@ -43,42 +48,96 @@ h6 {
   border-color: #014D40 !important; 
 } 
  
-.btn-main:hover, 
-.btn-main:focus, 
-.btn-main:active, 
-.btn-main.active, 
-.open .dropdown-toggle.btn-main { 
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.open .dropdown-toggle.btn-primary { 
   color: #ffffff !important; 
   background-color: #0C6B58 !important; 
   border-color: #014D40 !important; 
 } 
  
-.btn-main:active, 
-.btn-main.active, 
-.open .dropdown-toggle.btn-main { 
+.btn-primary:active, 
+.btn-primary.active, 
+.open .dropdown-toggle.btn-primary { 
   background-image: none; 
 } 
  
-.btn-main.disabled, 
-.btn-main[disabled], 
-fieldset[disabled] .btn-main, 
-.btn-main.disabled:hover, 
-.btn-main[disabled]:hover, 
-fieldset[disabled] .btn-main:hover, 
-.btn-main.disabled:focus, 
-.btn-main[disabled]:focus, 
-fieldset[disabled] .btn-main:focus, 
-.btn-main.disabled:active, 
-.btn-main[disabled]:active, 
-fieldset[disabled] .btn-main:active, 
-.btn-main.disabled.active, 
-.btn-main[disabled].active, 
-fieldset[disabled] .btn-main.active { 
+.btn-primary.disabled, 
+.btn-primary[disabled], 
+fieldset[disabled] .btn-primary, 
+.btn-primary.disabled:hover, 
+.btn-primary[disabled]:hover, 
+fieldset[disabled] .btn-primary:hover, 
+.btn-primary.disabled:focus, 
+.btn-primary[disabled]:focus, 
+fieldset[disabled] .btn-primary:focus, 
+.btn-primary.disabled:active, 
+.btn-primary[disabled]:active, 
+fieldset[disabled] .btn-primary:active, 
+.btn-primary.disabled.active, 
+.btn-primary[disabled].active, 
+fieldset[disabled] .btn-primary.active { 
   background-color: #199473; 
   border-color: #014D40; 
 } 
  
-.btn-main .badge { 
+.btn-primary .badge { 
   color: #199473; 
   background-color: #ffffff; 
 }
+
+
+
+
+.Collapsible {
+  background-color: white; }
+
+.Collapsible__contentInner {
+  padding: 10px;
+  border: 1px solid #ebebeb;
+  border-top: 0; }
+  .Collapsible__contentInner p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px; }
+    .Collapsible__contentInner p:last-child {
+      margin-bottom: 0; }
+
+.Collapsible__trigger {
+  display: block;
+  font-weight: 400;
+  text-decoration: none;
+  color: #333333;
+  position: relative;
+  border: 1px solid white;
+  padding: 10px;
+  background: #199473;
+  color: white; }
+  .Collapsible__trigger:after {
+    font-family: 'FontAwesome';
+    content: '\f107';
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: block;
+    transition: transform 300ms; }
+  .Collapsible__trigger.is-open:after {
+    transform: rotateZ(180deg); }
+  .Collapsible__trigger.is-disabled {
+    opacity: 0.5;
+    background-color: grey; }
+
+.CustomTriggerCSS {
+  background-color: lightcoral;
+  transition: background-color 200ms ease; }
+
+.CustomTriggerCSS--open {
+  background-color: darkslateblue; }
+
+.Collapsible__custom-sibling {
+  padding: 5px;
+  font-size: 12px;
+  background-color: #CBB700;
+  color: black; }

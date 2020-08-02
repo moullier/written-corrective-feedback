@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "../../App.css";
-import "./index.css";
 import Axios from "axios";
 import $ from "jquery";
 
@@ -8,16 +7,17 @@ class Class extends Component {
   constructor(props) {
     super(props);
 
-    console.log(this.props.location.state);
+    console.log(this.props);
 
     this.state = {
       uid: this.props.location.state.uid,
       classId: this.props.location.state.classId,
-      courseId: this.props.location.state.courseId,
+      courseId: null,
       classTitle: "",
       assignmentList: [],
       newAssignmentTitle: "",
-      newAssignmentDescription: ""
+      newAssignmentDescription: "",
+      timePeriod: ""
     }
 
     this.goToAssnPage = this.goToAssnPage.bind(this);
@@ -29,8 +29,10 @@ class Class extends Component {
   componentDidMount () {
     Axios.get("/api/class_name/" + this.state.classId)
     .then(nameData => {
-      console.log(nameData.data);
-      let cName = nameData.data.name;
+      console.log(nameData.data[0]);
+      const cName = nameData.data[0].name;
+      const courseId = nameData.data[0].id;
+      const time_period = nameData.data[0].ClassLists[0].time_period_name;
 
       Axios.get("/api/assignment_list/" + this.state.classId)
       .then(assListData => {
@@ -39,7 +41,9 @@ class Class extends Component {
 
         this.setState({
           classTitle: cName,
-          assignmentList: assnList
+          assignmentList: assnList,
+          courseId: courseId,
+          timePeriod: time_period
          })
       })
     })
@@ -63,7 +67,13 @@ class Class extends Component {
         Axios.get("/api/assignment_list/" + this.state.classId)
         .then((result_data) => {
           console.log(result_data.data);
-          this.setState({assignmentList: result_data.data}, () => {
+          this.setState({
+            assignmentList: result_data.data,
+            newAssignmentTitle: "",
+            newAssignmentDescription: ""
+          }, () => {
+            $("#inputAssnTitle").val("");
+            $("#inputAssnDesc").val("");
             $("#addAssnModal").modal('hide')
           });
         });
@@ -143,24 +153,26 @@ class Class extends Component {
   </div>;
 
     return (
-        <div>
-          <h3>{this.state.classTitle}</h3>
+        <div className="container">
+          <h3>{this.state.classTitle} - {this.state.timePeriod}</h3>
           <h3>Assignments:</h3>
-          {this.state.assignmentList.map((el, index) => (
-                  <div className="row mb-2" key={index}>
-                  <div className="col-6">{el.name}</div>
-                  <div className="col-6">
-                    <button 
-                    value={el.id}
-                    title={el.name}
-                    className="btn btn-primary"
-                    onClick={this.goToAssnPage}
-                    >
-                      Assignment Hub
-                    </button>
+          <div className="rounded p-3 mb-3" id="assignmentsDiv">
+            {this.state.assignmentList.map((el, index) => (
+                    <div className="row mb-2" key={index}>
+                    <div className="col-6">{el.name}</div>
+                    <div className="col-6">
+                      <button 
+                      value={el.id}
+                      title={el.name}
+                      className="btn btn-primary float-right"
+                      onClick={this.goToAssnPage}
+                      >
+                        Assignment Hub
+                      </button>
+                    </div>
                   </div>
-                </div>
-          ))}
+            ))}
+          </div>
           <button className="btn btn-secondary btn-lg" data-toggle="modal" data-target="#addAssnModal">Create New Assignment</button>
           {addAssnModal}
         </div>

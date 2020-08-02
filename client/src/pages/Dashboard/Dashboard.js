@@ -87,10 +87,6 @@ class Dashboard extends Component {
           courseName: this.state.newClassName
         })
         .then((res_data) => {
-          
-          // console.log(res_data);
-          // console.log(this.state.newClassPeriod);
-
           // add new class section to db, linking course id
           Axios.post("/api/new_class/" + res_data.data.id, {
             classPeriod: this.state.newClassPeriod
@@ -233,6 +229,7 @@ class Dashboard extends Component {
     });
   }
 
+  // move from step to step in the modal, hiding and showing elements
   moveToNextStep() {
     if(this.state.newCourse && this.state.newClassName.length > 0) {
       $("#courseDropdown").hide();
@@ -260,8 +257,6 @@ class Dashboard extends Component {
         modalStep: 2
       })
     }
-
-
   }
 
   // when closing modal, reset all the relevant parts of state
@@ -301,28 +296,13 @@ class Dashboard extends Component {
     // console.log("Total Width:");
     // console.log(window.screen.width);
     let pageToRender = "";
-    let mapStatement = this.state.classList.map((classEl, index) => (
-      <div className="row mb-2" key={index}>
-        <div className="col-4">{classEl.name}</div>
-        <div className="col-4">{classEl.time_period}</div>
-        <div className="col-4">
-          <button 
-          value={classEl.id}
-          className="btn btn-primary"
-          onClick={this.goToClassPage}
-          >
-            Class Hub
-          </button>
-        </div>
-      </div>));
     
     if(this.state.classList.length !== 0) {
       pageToRender = <div className="container">
-        <DashboardClassList classList={this.state.classList}/>
         <h3>Active Classes:</h3>
-        {mapStatement}
-        <button className="btn btn-secondary" data-toggle="modal" data-target="#addClassModal">Create New Class</button>
-        </div>
+        <DashboardClassList classList={this.state.classList} uid={this.state.uid}/>
+        <button className="btn btn-lg btn-secondary mt-3" data-toggle="modal" data-target="#addClassModal">Create New Class</button>
+      </div>
     } else if(this.state.successfulLoad) {
       pageToRender = <div>
         <h3>No Classes Created Yet</h3>

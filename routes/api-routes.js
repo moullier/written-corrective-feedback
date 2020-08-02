@@ -154,7 +154,7 @@ app.get("/api/assignment/:id", function (req, res) {
 app.get("/api/course_name/:id", function (req, res) {
   let courseId = req.params.id;
 
-  db.CourseList.findOne({
+  db.Course.findOne({
     where: {
       id: courseId
     }
@@ -162,6 +162,27 @@ app.get("/api/course_name/:id", function (req, res) {
     res.json(dbCourseList);
   })
 })
+
+// get info on a course and class when given the classId
+app.get("/api/class_name/:id", function (req, res) {
+  const classId = req.params.id;
+  console.log("classId = " + classId);
+
+  db.Course.findAll({
+    include: [
+      {
+        model: db.ClassList,
+        where: {id: classId}
+      }
+    ]
+  }).then(function(dbClass) {
+    console.log("**************");
+    console.log("**************");
+    console.log(dbClass);
+    res.json(dbClass);
+  })
+})
+
 
   // POST ROUTES
 
