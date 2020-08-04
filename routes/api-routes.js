@@ -78,110 +78,131 @@ module.exports = function (app) {
     }
   });
 
+
   // GET ROUTES
 
+  // get all classes that belong to a specific user
+  app.get("/api/class_list/:id", function (req, res) {
+    let userId = req.params.id;
 
-// get all classes that belong to a specific user
-app.get("/api/class_list/:id", function (req, res) {
-  let userId = req.params.id;
-
-  console.log("userId in /api/class_list = " + userId);
-  
-  db.Course.findAll({
-    include: [
-      {
-        model: db.ClassList
+    console.log("userId in /api/class_list = " + userId);
+    
+    db.Course.findAll({
+      include: [
+        {
+          model: db.ClassList
+        }
+      ],
+      where: {
+        UserId: userId
       }
-    ],
-    where: {
-      UserId: userId
-    }
-  }).then(function(dbClassList) {
-    console.log(dbClassList);
-    res.json(dbClassList);
+    }).then(function(dbClassList) {
+      console.log(dbClassList);
+      res.json(dbClassList);
+    })
   })
-})
 
 
-// get all courses that belong to a specific user
-app.get("/api/course_list/:uid", function (req, res) {
-  let userId = req.params.uid;
+  // get all courses that belong to a specific user
+  app.get("/api/course_list/:uid", function (req, res) {
+    let userId = req.params.uid;
 
-  console.log("userId in /api/course_list = " + userId);
-  
-  db.Course.findAll({
-    where: {
-      UserId: userId
-    }
-  }).then(function(dbCourse) {
-    res.json(dbCourse);
-  })
-})
-
-
-// get all assignments for a specific given class
-app.get("/api/assignment_list/:id", function (req, res) {
-  let classId = req.params.id;
-
-  console.log("classId in /api/assignment_list = " + classId);
-
-  db.Assignment.findAll({
-    where: {
-      ClassListId: classId
-    }
-  }).then(function(dbAssignmentList) {
-    console.log(dbAssignmentList);
-    res.json(dbAssignmentList);
-  })
-})
-
-
-app.get("/api/assignment/:id", function (req, res) {
-  let assnId = req.params.id;
-
-  db.Assignment.findOne({
-    where: {
-      id: assnId
-    }
-  }).then(function(dbAssignment) {
-    console.log(dbAssignment);
-    res.json(dbAssignment);
-  })
-})
-
-
-// get info on a course when given the courseId
-app.get("/api/course_name/:id", function (req, res) {
-  let courseId = req.params.id;
-
-  db.Course.findOne({
-    where: {
-      id: courseId
-    }
-  }).then(function(dbCourseList) {
-    res.json(dbCourseList);
-  })
-})
-
-// get info on a course and class when given the classId
-app.get("/api/class_name/:id", function (req, res) {
-  const classId = req.params.id;
-  console.log("classId = " + classId);
-
-  db.Course.findAll({
-    include: [
-      {
-        model: db.ClassList,
-        where: {id: classId}
+    console.log("userId in /api/course_list = " + userId);
+    
+    db.Course.findAll({
+      where: {
+        UserId: userId
       }
-    ]
-  }).then(function(dbClass) {
-    console.log("**************");
-    console.log("**************");
-    console.log(dbClass);
-    res.json(dbClass);
+    }).then(function(dbCourse) {
+      res.json(dbCourse);
+    })
   })
-})
+
+
+  // get all assignments for a specific given class
+  app.get("/api/assignment_list/:id", function (req, res) {
+    let classId = req.params.id;
+
+    console.log("classId in /api/assignment_list = " + classId);
+
+    db.Assignment.findAll({
+      where: {
+        ClassListId: classId
+      }
+    }).then(function(dbAssignmentList) {
+      console.log(dbAssignmentList);
+      res.json(dbAssignmentList);
+    })
+  })
+
+
+  // get assignment given an assignment ID
+  app.get("/api/assignment/:id", function (req, res) {
+    let assnId = req.params.id;
+
+    db.Assignment.findOne({
+      include: [
+        {
+          model: db.Tool1
+        }
+      ],
+      where: {
+        id: assnId
+      }
+    }).then(function(dbAssignment) {
+      console.log(dbAssignment);
+      res.json(dbAssignment);
+    })
+  })
+
+
+  // get info on a course when given the courseId
+  app.get("/api/course_name/:id", function (req, res) {
+    let courseId = req.params.id;
+
+    db.Course.findOne({
+      where: {
+        id: courseId
+      }
+    }).then(function(dbCourseList) {
+      res.json(dbCourseList);
+    })
+  })
+
+  // get info on a course and class when given the classId
+  app.get("/api/class_name/:id", function (req, res) {
+    const classId = req.params.id;
+    // console.log("classId = " + classId);
+
+    db.Course.findAll({
+      include: [
+        {
+          model: db.ClassList,
+          where: {id: classId}
+        }
+      ]
+    }).then(function(dbClass) {
+      // console.log("**************");
+      // console.log("**************");
+      // console.log(dbClass);
+      res.json(dbClass);
+    })
+  })
+
+  // get tool1, given the assignment ID
+  app.get("/api/tool1/:assnId", function (req, res) {
+    const assnId = req.params.assnId;
+
+    db.Tool1.findOne({
+      where: {
+        AssignmentId: assnId
+      }
+    }).then(function(dbTool1List) {
+      console.log(dbTool1List);
+      res.json(dbTool1List);
+    })
+
+  })
 
 
   // POST ROUTES
@@ -259,6 +280,7 @@ app.get("/api/class_name/:id", function (req, res) {
     });
   })
 
+  // create new tool 1, given assignment ID
   app.post("/api/new_tool1/:assn_id", function (req, res) {
     console.log(req.params.assn_id);
     

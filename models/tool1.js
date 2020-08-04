@@ -11,6 +11,11 @@ module.exports = function(sequelize, DataTypes) {
         returnDate: {
             type: DataTypes.DATE,
             allowNull: true
+        },
+        completed: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     });
 

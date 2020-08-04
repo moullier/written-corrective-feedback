@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import "../../App.css";
 import Axios from "axios";
-// import $ from "jquery";
+import $ from "jquery";
 
 class Assignment extends Component {
   constructor(props) {
@@ -45,7 +45,26 @@ class Assignment extends Component {
   componentDidMount () {
     Axios.get("/api/assignment/" + this.state.assignmentId)
     .then(data => {
-      console.log(data.data.description);
+
+      console.log("GOT HERE");
+      if(data.data.Tool1 && data.data.Tool1.completed) {
+        console.log("tool 1 finished");
+        $("#tool1status").text("Tool Completed");
+      } else if(data.data.Tool1) {
+        $("#tool1status").text("In Progress");
+      } else {
+        console.log("tool 1 not created yet");
+        $("#tool1status").text("Not Started");
+      }
+
+      if(data.data.Tool2) {
+        console.log(data.data);
+        $("#tool1status").text("In Progress");
+      } else {
+        console.log("tool 2 not created yet");
+        $("#tool2status").text("Not Started");
+      }
+
 
       this.setState({assignmentDescription: data.data.description})
     })
@@ -72,9 +91,23 @@ class Assignment extends Component {
           <h1>{this.state.assignmentTitle}</h1>
           <h3>{this.state.classTitle}</h3>
           <p>{this.state.assignmentDescription}</p>
-          <button className="btn btn-primary btn-lg mx-1" onClick={this.goToTool}>Worksheet 1</button>
-          <button className="btn btn-primary btn-lg mx-1">Worksheet 2</button>
-          <button className="btn btn-primary btn-lg mx-1">Worksheet 3</button>
+          <div className="row">
+            <div className="col-4">
+              <button className="btn btn-primary btn-lg" onClick={this.goToTool}>Worksheet 1</button>
+              <br />
+              <span id="tool1status"></span><i className="far fa-check-circle"/>
+            </div>
+            <div className="col-4">
+              <button className="btn btn-primary btn-lg">Worksheet 2</button>
+              <br />
+              <span id="tool2status">Not Started</span><i className="far fa-circle"/>
+            </div>
+            <div className="col-4">
+              <button className="btn btn-primary btn-lg">Worksheet 3</button>
+              <br />
+              <span id="tool3status">Not Started</span><i className="far fa-circle"/>
+            </div>
+          </div>
         </div>
     )
   }

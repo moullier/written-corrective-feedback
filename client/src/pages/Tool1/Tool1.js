@@ -4,7 +4,7 @@ import "../../App.css";
 import "./index.css"
 import Axios from "axios";
 import $ from "jquery";
-import Popper from 'popper.js';
+// import Popper from 'popper.js';
 import 'bootstrap/js/dist/dropdown';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import "react-day-picker/lib/style.css";
@@ -36,9 +36,10 @@ class Tool1 extends Component {
       returnDisabled: false,
       expectationsEmpty: true,
       expectationsDisabled: false,
-      activeStep: 1,
+      activeStep: 0,
       selectedCorrectionTypes: [],
-      directnessLevel: undefined
+      directnessLevel: undefined,
+      toolExistsInDB: undefined
     }
 
     this.handleDayChange = this.handleDayChange.bind(this);
@@ -48,7 +49,22 @@ class Tool1 extends Component {
     this.handleDDChange = this.handleDDChange.bind(this);
     this.showNextStep = this.showNextStep.bind(this);
     this.handleDirectnessChange = this.handleDirectnessChange.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
+
+  componentDidMount() {
+
+    // attempt to fetch a tool1 from database, if one exists
+    Axios.get("/api/tool1/" + this.state.assignmentId)
+    .then((tool1data) => {
+      console.log(tool1data);
+    })
+    .catch((err) => {
+      console.log("I am an error");
+      console.log(err);
+    })
+  }
+
 
   handleDayChange(assignedDay, modifiers, dayPickerInput) {
     const input = dayPickerInput.getInput();
@@ -232,7 +248,7 @@ class Tool1 extends Component {
               </li>
             </ul>
           </div>
-          <div id="step_1">
+          <div id="step_1" className="initiallyHidden">
             <h5>Step 1: Assignment Flowchart</h5>
             <p>Enter date the assignment will be distributed to students:</p>
             <div className="mb-3">
@@ -492,6 +508,7 @@ class Tool1 extends Component {
             <p>In this final optional step, consider whether or not students will be providing WCF to each other before they submit the assignment by the deadline you set in Step 1. Lee (2019) recommends that students determine 1-2 error categories that they find personally difficult and have peers provide feedback on only those categories on a draft version of their assignment.  </p>
           </div>
           <button className="btn btn-primary mr-3" value="1" onClick={this.showNextStep}>Next Step</button>
+          <br />
           <Link to={{
             pathname: "/assignment",
             state: { 
