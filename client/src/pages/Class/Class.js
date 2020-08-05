@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "../../App.css";
 import Axios from "axios";
 import $ from "jquery";
@@ -21,6 +22,7 @@ class Class extends Component {
     }
 
     this.goToAssnPage = this.goToAssnPage.bind(this);
+    this.goToDashboard = this.goToDashboard.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.createNewAssignment = this.createNewAssignment.bind(this);
   }
@@ -110,6 +112,17 @@ class Class extends Component {
     window.location.reload();
   }
 
+  goToDashboard() {
+
+
+    this.props.history.push({
+      pathname: '/dashboard',
+      state: { 
+        uid: this.state.uid
+       }
+     });
+  }
+
   render() {
 
     let addAssnModal = <div className="modal" id="addAssnModal" tabIndex="-1" role="dialog">
@@ -174,6 +187,11 @@ class Class extends Component {
             ))}
           </div>
           <button className="btn btn-secondary btn-lg" data-toggle="modal" data-target="#addAssnModal">Create New Assignment</button>
+          <br />
+          <Link className="mt-3" to={{
+              pathname: '/dashboard',
+              state: { id: this.state.uid }
+          }}>Back to Dashboard</Link>
           {addAssnModal}
         </div>
     )

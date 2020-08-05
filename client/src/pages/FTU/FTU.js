@@ -21,6 +21,7 @@ class FTU extends Component {
             console.log(data);
             this.setState({uid: data.data.id});
             // then set user's FTU property to false
+            
         })
         .catch((err) => {
             console.log("Error: No user logged in");

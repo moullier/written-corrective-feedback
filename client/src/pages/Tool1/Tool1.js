@@ -187,7 +187,7 @@ class Tool1 extends Component {
           <table className="table selectedCorrectionsTable" id="CEFRTable">
             <tbody>
               <tr className="d-flex">
-                <td rowspan="2">Proficient User</td>
+                <td rowSpan="2">Proficient User</td>
                 <td>C2</td>
                 <td>Can understand with ease virtually everything heard or read. Can summarise information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation. Can express him/herself spontaneously, very fluently and precisely, differentiating finer shades of meaning even in more complex situations.</td>
               </tr>
@@ -196,7 +196,7 @@ class Tool1 extends Component {
                 <td>text text</td>
               </tr>
               <tr className="d-flex">
-                <td rowspan="2">Independent User</td>
+                <td rowSpan="2">Independent User</td>
                 <td>B2</td>
                 <td>text text</td>
               </tr>
@@ -205,7 +205,7 @@ class Tool1 extends Component {
                 <td>text text</td>
               </tr>
               <tr className="d-flex">
-                <td rowspan="2">Basic User</td>
+                <td rowSpan="2">Basic User</td>
                 <td>A2</td>
                 <td>text text</td>
               </tr>
