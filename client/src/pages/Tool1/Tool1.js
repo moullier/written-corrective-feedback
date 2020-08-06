@@ -39,7 +39,8 @@ class Tool1 extends Component {
       activeStep: 0,
       selectedCorrectionTypes: [],
       directnessLevel: undefined,
-      toolExistsInDB: undefined
+      toolExistsInDB: undefined,
+      tool1ID: null
     }
 
     this.handleDayChange = this.handleDayChange.bind(this);
@@ -58,6 +59,15 @@ class Tool1 extends Component {
     Axios.get("/api/tool1/" + this.state.assignmentId)
     .then((tool1data) => {
       console.log(tool1data);
+      let dataExists = false;
+      let tool1ID = null;
+      if(tool1data) {
+        dataExists = true;
+      }
+
+      this.setState({
+        toolExistsInDB: dataExists
+      })
     })
     .catch((err) => {
       console.log("I am an error");
@@ -109,28 +119,38 @@ class Tool1 extends Component {
     console.log("activeStep: " + this.state.activeStep);
     console.log("assignmentId: " + this.state.assignmentId);
 
-    Axios.post("/api/new_tool1/" + this.state.assignmentId, {
-      dateAssigned: this.state.assignedDay,
-      dueDate: this.state.dueDay,
-      returnDate: this.state.returnDay,
-      AssignmentId: this.state.assignmentId
-    })
-    .then(res => {
-      console.log(res);
+    if(!this.state.toolExistsInDB) {
+      // create new database entry
+      Axios.post("/api/new_tool1/" + this.state.assignmentId, {
+        dateAssigned: this.state.assignedDay,
+        dueDate: this.state.dueDay,
+        returnDate: this.state.returnDay,
+        AssignmentId: this.state.assignmentId
+      })
+      .then(res => {
+        console.log(res);
+  
+        let currentStepString = "#step_" + this.state.activeStep;
+        let nextStep = parseInt(this.state.activeStep) + 1;
+        let nextStepString = "#step_" + nextStep;
+        if(this.state.activeStep === 1) {
+          $("#step_0").hide();
+        }
+        $(currentStepString).hide();
+        $(nextStepString).show();
+  
+        this.setState({activeStep: this.state.activeStep + 1});
+      })
+    } else {
+      // update existing database entry
+      Axios.put("/api/tool1" + this.state.tool1ID, {
 
-      let currentStepString = "#step_" + this.state.activeStep;
-      let nextStep = parseInt(this.state.activeStep) + 1;
-      let nextStepString = "#step_" + nextStep;
-      if(this.state.activeStep === 1) {
-        $("#step_0").hide();
-      }
-      $(currentStepString).hide();
-      $(nextStepString).show();
+      })
+      .then(res => {
+        console.log(res);
+      })
+    }
 
-      this.setState({activeStep: this.state.activeStep + 1});
-
-
-    })
   }
 
   handleDDChange(e) {
@@ -523,7 +543,6 @@ class Tool1 extends Component {
         </div>
     )
   }
-
 }
   
 export default Tool1;

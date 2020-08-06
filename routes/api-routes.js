@@ -304,6 +304,7 @@ module.exports = function (app) {
 
   // PUT ROUTES
 
+  // update user institution
   app.put("/api/update_user_inst/:id", function (req, res) {
 
     console.log("The user id being modified is: " + req.params.id);
@@ -326,6 +327,27 @@ module.exports = function (app) {
 })
 
 
+app.put("/api/tool1/:id", function (req, res) {
+
+  console.log("The tool 1 id being modified is: " + req.params.id);
+  console.log("req.body" + req.body);
+  
+  db.Tool1.update(
+    // what do we need to update here?????
+    { institution: req.body.institution }, 
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+  .then(function(data) {
+    console.log("DATA IS");
+    console.log(data);
+    res.json({
+      data: data
+    });
+});
+})
 
 
 
