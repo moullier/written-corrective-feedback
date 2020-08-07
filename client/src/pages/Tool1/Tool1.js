@@ -9,6 +9,7 @@ import 'bootstrap/js/dist/dropdown';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import "react-day-picker/lib/style.css";
 import Select from 'react-select';
+import Tool1Step0 from "../../components/Tool1Step0";
 
 
 class Tool1 extends Component {
@@ -24,6 +25,12 @@ class Tool1 extends Component {
       classTitle: this.props.location.state.classTitle,
       assignmentId: this.props.location.state.assignmentId,
       assignmentTitle: this.props.location.state.assignmentTitle,
+      activeStep: 0,
+      selectedCorrectionTypes: [],
+      directnessLevel: undefined,
+      toolExistsInDB: undefined,
+      tool1ID: null,
+      // state for dayPicker components
       assignedDay: undefined,
       dueDay: undefined,
       returnDay: undefined,
@@ -35,12 +42,7 @@ class Tool1 extends Component {
       returnEmpty: true,
       returnDisabled: false,
       expectationsEmpty: true,
-      expectationsDisabled: false,
-      activeStep: 0,
-      selectedCorrectionTypes: [],
-      directnessLevel: undefined,
-      toolExistsInDB: undefined,
-      tool1ID: null
+      expectationsDisabled: false
     }
 
     this.handleDayChange = this.handleDayChange.bind(this);
@@ -58,21 +60,53 @@ class Tool1 extends Component {
     // attempt to fetch a tool1 from database, if one exists
     Axios.get("/api/tool1/" + this.state.assignmentId)
     .then((tool1data) => {
-      console.log(tool1data);
+      console.log("tool1data.data is: ");
+      console.log(tool1data.data);
       let dataExists = false;
       let tool1ID = null;
-      if(tool1data) {
+      let assignedDay, dueDay, returnDay;
+      let dueDayObj, assignedDayObj, returnDayObj;
+      
+      // if a database record exists for the tool, parse the dates and set the state
+      if(tool1data.data) {
         dataExists = true;
+        tool1ID = tool1data.data.id;
+        assignedDay = tool1data.data.dateAssigned;
+        dueDay = tool1data.data.dueDate;
+        returnDay = tool1data.data.returnDate;
+
+        assignedDayObj = this.parseDBDate(assignedDay);
+        console.log(assignedDayObj);
+        dueDayObj = this.parseDBDate(dueDay);
+        console.log(dueDayObj);
+        returnDayObj = this.parseDBDate(returnDay);
+        console.log(returnDayObj);
+
       }
 
       this.setState({
-        toolExistsInDB: dataExists
+        toolExistsInDB: dataExists,
+        tool1ID: tool1ID,
+        assignedDay: assignedDayObj,
+        dueDay: dueDayObj,
+        returnDay: returnDayObj
       })
     })
     .catch((err) => {
       console.log("I am an error");
       console.log(err);
     })
+  }
+
+  parseDBDate(inputDate) {
+    let dateTimeParts = inputDate.split(/[- :TZ]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
+    dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
+    const dateObject = new Date(...dateTimeParts); // our Date object
+    console.log(dateObject);
+    console.log(typeof(dateObject));
+
+    return dateObject;
+
   }
 
 
@@ -119,8 +153,9 @@ class Tool1 extends Component {
     console.log("activeStep: " + this.state.activeStep);
     console.log("assignmentId: " + this.state.assignmentId);
 
-    if(!this.state.toolExistsInDB) {
+    if(!this.state.toolExistsInDB && this.state.activeStep > 0) {
       // create new database entry
+      console.log("making new db entry");
       Axios.post("/api/new_tool1/" + this.state.assignmentId, {
         dateAssigned: this.state.assignedDay,
         dueDate: this.state.dueDay,
@@ -139,16 +174,67 @@ class Tool1 extends Component {
         $(currentStepString).hide();
         $(nextStepString).show();
   
-        this.setState({activeStep: this.state.activeStep + 1});
+        this.setState({
+          activeStep: this.state.activeStep + 1,
+          toolExistsInDB: true,
+          tool1ID: res.data.id
+        });
       })
     } else {
+      console.log("updating db entry");
       // update existing database entry
-      Axios.put("/api/tool1" + this.state.tool1ID, {
+      let updateObject;
+      
+      switch(this.state.activeStep) {
+        case 1:
+          console.log("updating on step 1");
+          updateObject = {
+            dateAssigned: this.state.assignedDay,
+            dueDate: this.state.dueDay,
+            returnDate: this.state.returnDay
+          };
+          break;
+        case 2:
+          console.log("updating on step 2");
+          updateObject = {
+            correctionTypes: this.state.selectedCorrectionTypes
+          };
+    
+      }
 
-      })
-      .then(res => {
-        console.log(res);
-      })
+      let currentStepString = "step_" + this.state.activeStep;
+      let nextStep = parseInt(this.state.activeStep) + 1;
+      let nextStepString = "#step_" + nextStep;
+
+      if(this.state.activeStep !== 0) {
+        Axios.put("/api/tool1/" + currentStepString +"/" + this.state.tool1ID, updateObject)
+        .then(res => {
+          console.log(res);
+  
+          currentStepString = "#" + currentStepString;
+          // let nextStep = parseInt(this.state.activeStep) + 1;
+          // let nextStepString = "#step_" + nextStep;
+          if(this.state.activeStep === 1) {
+            $("#step_0").hide();
+          }
+          $(currentStepString).hide();
+          $(nextStepString).show();
+  
+          this.setState({activeStep: this.state.activeStep + 1});
+        })
+      } else {
+        currentStepString = "#" + currentStepString;
+        // let nextStep = parseInt(this.state.activeStep) + 1;
+        // let nextStepString = "#step_" + nextStep;
+        if(this.state.activeStep === 1) {
+          $("#step_0").hide();
+        }
+        $(currentStepString).hide();
+        $(nextStepString).show();
+
+        this.setState({activeStep: this.state.activeStep + 1});
+      }
+
     }
 
   }
@@ -169,10 +255,27 @@ class Tool1 extends Component {
     const { returnDay, returnDisabled, returnEmpty } = this.state;
     const { expectationsDay, expectationsDisabled, expectationsEmpty } = this.state;
 
+    // calculate className for column widths based on number of correction types selected
+    console.log("number of correction types selected:" + this.state.selectedCorrectionTypes.length);
+
+    let secondCorrectionsRow = (this.state.selectedCorrectionTypes.length > 3 ) ? 
+    <tr className="d-flex" id="correctionsRow">
+      <td className="col-4">
+        {this.state.selectedCorrectionTypes[3]}
+      </td>
+      <td className="col-4">
+        {this.state.selectedCorrectionTypes[4]}
+      </td>
+      <td className="col-4">
+        {this.state.selectedCorrectionTypes[5]}
+      </td>
+    </tr> : "";
+
+
     const correctionOptions = [
       { value: 'Verb Form (conjugation)', label: 'Verb Form (conjugation)'},
       { value: 'Verb Tense (time, aspect or mode)', label: 'Verb Tense (time, aspect or mode)'},
-      { value: 'SentenceStructure', label: 'Sentence Structure' },
+      { value: 'Sentence Structure', label: 'Sentence Structure' },
       { value: 'Word Order', label: 'Word Order' },
       { value: 'Word Choice', label: 'Word Choice' },
       { value: 'Prepositions', label: 'Prepositions' },
@@ -250,24 +353,7 @@ class Tool1 extends Component {
         <div className="container">
           <h1>Assignment Blueprint Tool – Plan Your Assignment!</h1>
           <h2 className="mb-5">{this.state.assignmentTitle}</h2>
-          <div id="step_0">
-            <p>Use this planning tool to develop a WCF strategy and timeline for a specific assignment.</p>
-            <p>This tool will help you to:</p>
-            <ul>
-              <li>
-              Breakdown an assignment into several integrated deadlines that support your WCF strategy
-              </li>
-              <li>
-              Tailor a detailed WCF strategy to this assignment that includes the error categories you will be targeting and the specific method you will use to annotate these errors
-              </li>
-            </ul>
-            <p>Before using this tool, you’ll need:</p>
-            <ul>
-              <li>
-              A general sense of the learning outcomes, requirements, and approximate deadline of a writing assignment students will have to prepare for your course
-              </li>
-            </ul>
-          </div>
+          <Tool1Step0 id="step_0"/>
           <div id="step_1" className="initiallyHidden">
             <h5>Step 1: Assignment Flowchart</h5>
             <p>Enter date the assignment will be distributed to students:</p>
@@ -286,10 +372,7 @@ class Tool1 extends Component {
               value={dueDay}
               onDayChange={this.handleDueDayChange}
               dayPickerProps={{
-                assignedDays: dueDay,
-                disabledDays: {
-                  daysOfWeek: [0, 6],
-                },
+                assignedDays: dueDay
               }}
             />
           </div>
@@ -299,10 +382,7 @@ class Tool1 extends Component {
                 value={returnDay}
                 onDayChange={this.handleReturnDayChange}
                 dayPickerProps={{
-                  assignedDays: returnDay,
-                  disabledDays: {
-                    daysOfWeek: [0, 6],
-                  },
+                  assignedDays: returnDay
                 }}
               />
             </div>
@@ -368,7 +448,7 @@ class Tool1 extends Component {
                 </thead>
                 <tbody>
                   <tr className="d-flex" id="correctionsRow">
-                    <td scope="row" className="col-4">
+                    <td className="col-4">
                       {this.state.selectedCorrectionTypes[0]}
                     </td>
                     <td className="col-4">
@@ -378,6 +458,7 @@ class Tool1 extends Component {
                       {this.state.selectedCorrectionTypes[2]}
                     </td>
                   </tr>
+                  {secondCorrectionsRow}
                 </tbody>
               </table>
             </div>

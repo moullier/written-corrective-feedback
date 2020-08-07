@@ -326,15 +326,19 @@ module.exports = function (app) {
   });
 })
 
+// Tool 1 - Step 1 Update
+// updates date assigned, due date and date returned
+app.put("/api/tool1/step_1/:id", function (req, res) {
 
-app.put("/api/tool1/:id", function (req, res) {
-
+  console.log("Step 1 update function");
   console.log("The tool 1 id being modified is: " + req.params.id);
   console.log("req.body" + req.body);
   
-  db.Tool1.update(
-    // what do we need to update here?????
-    { institution: req.body.institution }, 
+  db.Tool1.update({
+      dateAssigned: req.body.dateAssigned,
+      dueDate: req.body.dueDate,
+      returnDate: req.body.returnDate,
+    }, 
     {
       where: {
         id: req.params.id
@@ -346,11 +350,51 @@ app.put("/api/tool1/:id", function (req, res) {
     res.json({
       data: data
     });
-});
+  });
 })
 
+// Tool 1 - Step 2 Update
+// updates correction types
+app.put("/api/tool1/step_2/:id", function (req, res) {
+
+  console.log("Step 2 update function");
+  console.log("The tool 1 id being modified is: " + req.params.id);
+  console.log("req.body:");
+  console.log(req.body);
+
+  // delete all existing correction types for this tool1 instance
+  // and add the ones from the body here
+  
+  db.CorrectionType.destroy({
+    where: {
+      Tool1Id: req.params.id
+    }
+  }).then(function (dbCorrectionType) {
+
+    console.log(dbCorrectionType);
+    res.json(dbCorrectionType);
+  }); // can we chain another then here?
 
 
+
+  // db.Tool1.update({
+  //     dateAssigned: req.body.dateAssigned,
+  //     dueDate: req.body.dueDate,
+  //     returnDate: req.body.returnDate,
+  //   }, 
+  //   {
+  //     where: {
+  //       id: req.params.id
+  //     }
+  //   })
+  // .then(function(data) {
+  //   console.log("DATA IS");
+  //   console.log(data);
+  //   res.json({
+  //     data: data
+  //   });
+  // });
+})
 
 
 

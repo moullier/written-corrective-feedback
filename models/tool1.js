@@ -27,6 +27,12 @@ module.exports = function(sequelize, DataTypes) {
         });
     };
 
+    Tool1.associate = function(models) {
+        Tool1.hasMany(models.CorrectionType, {
+          onDelete: "cascade"
+        });
+      };
+
 
     return Tool1;
   };

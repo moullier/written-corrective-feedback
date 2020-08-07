@@ -2,7 +2,7 @@ module.exports = function(sequelize, DataTypes) {
     let CorrectionType = sequelize.define("CorrectionType", {
         category: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         }
     });
 
