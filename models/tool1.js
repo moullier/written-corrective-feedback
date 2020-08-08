@@ -12,11 +12,28 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: true
         },
+        expectationsDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
         completed: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false
+        },
+        directnessLevel: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        expectationsSet: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        expectationsHow: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
+
     });
 
     Tool1.associate = function(models) {

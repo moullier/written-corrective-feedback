@@ -75,11 +75,11 @@ class Tool1 extends Component {
         dueDay = tool1data.data.dueDate;
         returnDay = tool1data.data.returnDate;
 
-        assignedDayObj = this.parseDBDate(assignedDay);
+        assignedDayObj = this.parseDBDate2(assignedDay);
         console.log(assignedDayObj);
-        dueDayObj = this.parseDBDate(dueDay);
+        dueDayObj = this.parseDBDate2(dueDay);
         console.log(dueDayObj);
-        returnDayObj = this.parseDBDate(returnDay);
+        returnDayObj = this.parseDBDate2(returnDay);
         console.log(returnDayObj);
 
       }
@@ -99,11 +99,30 @@ class Tool1 extends Component {
   }
 
   parseDBDate(inputDate) {
+    console.log("input date is:");
+    console.log(inputDate);
     let dateTimeParts = inputDate.split(/[- :TZ]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
     dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
+    console.log(dateTimeParts);
     const dateObject = new Date(...dateTimeParts); // our Date object
+    console.log("output date is: ");
     console.log(dateObject);
-    console.log(typeof(dateObject));
+    // console.log(typeof(dateObject));
+
+    return dateObject;
+
+  }
+
+  parseDBDate2(inputDate) {
+    console.log("input date is:");
+    console.log(inputDate);
+    // let dateTimeParts = inputDate.split(/[- :TZ]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
+    // dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
+    // console.log(dateTimeParts);
+    const dateObject = new Date(inputDate); // our Date object
+    console.log("output date is: ");
+    console.log(dateObject);
+    // console.log(typeof(dateObject));
 
     return dateObject;
 
@@ -199,6 +218,14 @@ class Tool1 extends Component {
           updateObject = {
             correctionTypes: this.state.selectedCorrectionTypes
           };
+          break;
+        case 3:
+          console.log("updating on step 3");
+          updateObject = {
+            directnessLevel: this.state.directnessLevel
+          };
+          break;
+          
     
       }
 
@@ -212,8 +239,7 @@ class Tool1 extends Component {
           console.log(res);
   
           currentStepString = "#" + currentStepString;
-          // let nextStep = parseInt(this.state.activeStep) + 1;
-          // let nextStepString = "#step_" + nextStep;
+
           if(this.state.activeStep === 1) {
             $("#step_0").hide();
           }
@@ -224,8 +250,6 @@ class Tool1 extends Component {
         })
       } else {
         currentStepString = "#" + currentStepString;
-        // let nextStep = parseInt(this.state.activeStep) + 1;
-        // let nextStepString = "#step_" + nextStep;
         if(this.state.activeStep === 1) {
           $("#step_0").hide();
         }
@@ -297,55 +321,55 @@ class Tool1 extends Component {
       { value: 'Underlining location of errors', label: 'Underlining location of errors' }
     ]
 
-    let languageProficiencyModal = <div className="modal" id="languageProficiencyModal" tabIndex="-1" role="dialog">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Language Proficiency Levels</h5>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.clearNewClass}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-          <table className="table selectedCorrectionsTable" id="CEFRTable">
-            <tbody>
-              <tr className="d-flex">
-                <td rowSpan="2">Proficient User</td>
-                <td>C2</td>
-                <td>Can understand with ease virtually everything heard or read. Can summarise information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation. Can express him/herself spontaneously, very fluently and precisely, differentiating finer shades of meaning even in more complex situations.</td>
-              </tr>
-              <tr>
-                <td>C1</td>
-                <td>text text</td>
-              </tr>
-              <tr className="d-flex">
-                <td rowSpan="2">Independent User</td>
-                <td>B2</td>
-                <td>text text</td>
-              </tr>
-              <tr>
-                <td>B1</td>
-                <td>text text</td>
-              </tr>
-              <tr className="d-flex">
-                <td rowSpan="2">Basic User</td>
-                <td>A2</td>
-                <td>text text</td>
-              </tr>
-              <tr>
-                <td>A1</td>
-                <td>text text</td>
-              </tr>
-            </tbody>
-          </table>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-primary" onClick={this.createNewAssignment}>Save changes</button>
-            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>;
+    // let languageProficiencyModal = <div className="modal" id="languageProficiencyModal" tabIndex="-1" role="dialog">
+    //   <div className="modal-dialog" role="document">
+    //     <div className="modal-content">
+    //       <div className="modal-header">
+    //         <h5 className="modal-title">Language Proficiency Levels</h5>
+    //         <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.clearNewClass}>
+    //           <span aria-hidden="true">&times;</span>
+    //         </button>
+    //       </div>
+    //       <div className="modal-body">
+    //       <table className="table selectedCorrectionsTable" id="CEFRTable">
+    //         <tbody>
+    //           <tr className="d-flex">
+    //             <td rowSpan="2">Proficient User</td>
+    //             <td>C2</td>
+    //             <td>Can understand with ease virtually everything heard or read. Can summarise information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation. Can express him/herself spontaneously, very fluently and precisely, differentiating finer shades of meaning even in more complex situations.</td>
+    //           </tr>
+    //           <tr>
+    //             <td>C1</td>
+    //             <td>text text</td>
+    //           </tr>
+    //           <tr className="d-flex">
+    //             <td rowSpan="2">Independent User</td>
+    //             <td>B2</td>
+    //             <td>text text</td>
+    //           </tr>
+    //           <tr>
+    //             <td>B1</td>
+    //             <td>text text</td>
+    //           </tr>
+    //           <tr className="d-flex">
+    //             <td rowSpan="2">Basic User</td>
+    //             <td>A2</td>
+    //             <td>text text</td>
+    //           </tr>
+    //           <tr>
+    //             <td>A1</td>
+    //             <td>text text</td>
+    //           </tr>
+    //         </tbody>
+    //       </table>
+    //       </div>
+    //       <div className="modal-footer">
+    //         <button type="button" className="btn btn-primary" onClick={this.createNewAssignment}>Save changes</button>
+    //         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>;
 
 
 
@@ -509,8 +533,10 @@ class Tool1 extends Component {
                 onChange={this.handleDirectnessChange} // assign onChange function
               />
             </div>
-            <button className="btn btn-link mb-3" data-toggle="modal" data-target="#languageProficiencyModal">See More Info</button>
-          {languageProficiencyModal}
+            <a href="https://www.coe.int/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank">More Information</a>
+            {/* <button className="btn btn-link mb-3" data-toggle="modal" data-target="#languageProficiencyModal">See More Info</button>
+          {languageProficiencyModal} */}
+
           </div>
           <div className="initiallyHidden" id="step_4">
             <h5>Step 4: Setting Student Expectations</h5>

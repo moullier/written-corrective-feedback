@@ -201,7 +201,20 @@ module.exports = function (app) {
       console.log(dbTool1List);
       res.json(dbTool1List);
     })
+  })
 
+  // get correction types, given the tool1 ID
+  app.get("/api/correction_types/:tool1Id", function (req, res) {
+    const tool1Id = req.params.tool1Id;
+
+    db.CorrectionType.findAll({
+      where: {
+        Tool1Id: tool1Id
+      }
+    }).then(function(dbCorrectionType) {
+      console.log(dbCorrectionType);
+      res.json(dbCorrectionType);
+    })
   })
 
 
@@ -372,30 +385,61 @@ app.put("/api/tool1/step_2/:id", function (req, res) {
   }).then(function (dbCorrectionType) {
 
     console.log(dbCorrectionType);
-    res.json(dbCorrectionType);
-  }); // can we chain another then here?
+    return dbCorrectionType;
+  })
+  .then(function (result) {
+    console.log("line 378");
+    console.log(result);
 
-
-
-  // db.Tool1.update({
-  //     dateAssigned: req.body.dateAssigned,
-  //     dueDate: req.body.dueDate,
-  //     returnDate: req.body.returnDate,
-  //   }, 
-  //   {
-  //     where: {
-  //       id: req.params.id
-  //     }
-  //   })
-  // .then(function(data) {
-  //   console.log("DATA IS");
-  //   console.log(data);
-  //   res.json({
-  //     data: data
-  //   });
-  // });
+    let types = req.body.correctionTypes;
+  
+    let itemList = [];
+  
+  
+    types.forEach(item => {
+      db.CorrectionType.create({
+        category: item,
+        Tool1Id: req.params.id
+      })
+      .then(function (dbTypes) {
+    
+        // console.log("Inserted item" + kit.item);
+        itemList.push(dbTypes);
+        if (itemList.length === types.length) {
+            res.status(200).json(itemList);
+        }
+      }).catch(function (error) {
+        res.status(500).json(error);            
+      });
+    })
+  })
 })
 
+
+// Tool 1 - Step 3 Update
+// updates date assigned, due date and date returned
+app.put("/api/tool1/step_3/:id", function (req, res) {
+
+  console.log("Step 3 update function");
+  console.log("The tool 1 id being modified is: " + req.params.id);
+  console.log("req.body" + req.body);
+  
+  db.Tool1.update({
+      directnessLevel: req.body.directnessLevel
+    }, 
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+  .then(function(data) {
+    console.log("DATA IS");
+    console.log(data);
+    res.json({
+      data: data
+    });
+  });
+})
 
 
 
