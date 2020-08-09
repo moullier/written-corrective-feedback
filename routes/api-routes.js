@@ -315,6 +315,10 @@ module.exports = function (app) {
 
 
 
+
+
+
+
   // PUT ROUTES
 
   // update user institution
@@ -440,6 +444,32 @@ app.put("/api/tool1/step_3/:id", function (req, res) {
     });
   });
 })
+
+
+  // set user's ftu to false
+  app.put("/api/user_ftu/:id", function (req, res) {
+
+    console.log("The user being modified is: " + req.params.id);
+    console.log("req.body" + req.body);
+    
+    db.User.update({
+        firstTimeUse: req.body.firstTimeUse
+      }, 
+      {
+        where: {
+          id: req.params.id
+        }
+      })
+    .then(function(data) {
+      console.log("DATA IS");
+      console.log(data);
+      res.json({
+        data: data
+      });
+    });
+  })
+
+
 
 
 

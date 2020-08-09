@@ -45,7 +45,10 @@ class Login extends Component {
         this.props.history.push("/ftu");
         window.location.reload();
       } else {
-        this.props.history.push("/dashboard");
+        this.props.history.push({
+          pathname: '/dashboard',
+          state: { id: data.data.id }
+      });
         window.location.reload();
       }
     })

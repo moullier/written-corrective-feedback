@@ -19,9 +19,14 @@ class FTU extends Component {
         Axios.get("/api/user_data")
         .then((data) => {
             console.log(data);
-            this.setState({uid: data.data.id});
-            // then set user's FTU property to false
             
+            Axios.put("/api/user_ftu/" + data.data.id, {firstTimeUse: false})
+            .then((result => {
+                console.log(data);
+                this.setState({uid: data.data.id})
+                
+            }))
+
         })
         .catch((err) => {
             console.log("Error: No user logged in");
@@ -41,6 +46,9 @@ class FTU extends Component {
                 state: { id: this.state.uid }
             });
             window.location.reload();
+        })
+        .catch((err) => {
+            console.log("Error: Database update failed");
         })
     }
 
@@ -74,8 +82,8 @@ class FTU extends Component {
                     />
                 </div>
                 <button type="submit" className="btn btn-primary mr-2">Submit</button>
-                <button onClick={this.addNewInstitution}
-                className="btn btn-secondary mr-2">Add Another Institution</button>
+                {/* <button onClick={this.addNewInstitution}
+                className="btn btn-secondary mr-2">Add Another Institution</button> */}
                 <Link to={{
                     pathname: '/dashboard',
                     state: { id: this.state.uid }
