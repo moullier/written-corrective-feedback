@@ -48,7 +48,7 @@ class Login extends Component {
         this.props.history.push({
           pathname: '/dashboard',
           state: { id: data.data.id }
-      });
+        });
         window.location.reload();
       }
     })
@@ -56,7 +56,6 @@ class Login extends Component {
       console.log("Error");
       console.log(err);
       $("#li-error").show().html("<strong>Error:</strong> Incorrect email or password");
-      // alert(err.message);
     });
   }
 

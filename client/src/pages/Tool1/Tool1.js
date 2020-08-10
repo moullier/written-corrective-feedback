@@ -42,7 +42,10 @@ class Tool1 extends Component {
       returnEmpty: true,
       returnDisabled: false,
       expectationsEmpty: true,
-      expectationsDisabled: false
+      expectationsDisabled: false,
+      responseDueDay: undefined,
+      responseDueEmpty: true,
+      responseDueDisabled: false,
     }
 
     this.handleDayChange = this.handleDayChange.bind(this);
@@ -50,6 +53,7 @@ class Tool1 extends Component {
     this.handleReturnDayChange = this.handleReturnDayChange.bind(this);
     this.handleExpectationsDayChange = this.handleExpectationsDayChange.bind(this);
     this.handleDDChange = this.handleDDChange.bind(this);
+    this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
     this.showNextStep = this.showNextStep.bind(this);
     this.handleDirectnessChange = this.handleDirectnessChange.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -116,13 +120,9 @@ class Tool1 extends Component {
   parseDBDate2(inputDate) {
     console.log("input date is:");
     console.log(inputDate);
-    // let dateTimeParts = inputDate.split(/[- :TZ]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
-    // dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
-    // console.log(dateTimeParts);
     const dateObject = new Date(inputDate); // our Date object
     console.log("output date is: ");
     console.log(dateObject);
-    // console.log(typeof(dateObject));
 
     return dateObject;
 
@@ -163,6 +163,15 @@ class Tool1 extends Component {
       expectationsDay,
       expectationsEmpty: !input.value.trim(),
       expectationsDisabled: modifiers.disabled === true,
+    });
+  }
+
+  handleResponseDueDayChange(responseDueDay, modifiers, dayPickerInput) {
+    const input = dayPickerInput.getInput();
+    this.setState({
+      responseDueDay,
+      responseDueEmpty: !input.value.trim(),
+      responseDueDisabled: modifiers.disabled === true,
     });
   }
 
@@ -225,6 +234,13 @@ class Tool1 extends Component {
             directnessLevel: this.state.directnessLevel
           };
           break;
+        case 4:
+          console.log("updating on step 4");
+          updateObject = {
+            expectationsSet: this.state.expectationsSet,
+            expectationsHow: this.state.expectationsHow,
+            expectationsDate: this.state.expectationsDay
+          };
           
     
       }
@@ -273,11 +289,17 @@ class Tool1 extends Component {
     this.setState({directnessLevel: e.value});
   }
 
+  handleTextAreaChange(e) {
+    const fieldName = e.target.name;
+    this.setState({fieldName: e.target.value});
+  }
+
   render() {
     const { assignedDay, isDisabled, isEmpty } = this.state;
     const { dueDay, dueDisabled, dueEmpty } = this.state;
     const { returnDay, returnDisabled, returnEmpty } = this.state;
     const { expectationsDay, expectationsDisabled, expectationsEmpty } = this.state;
+    const { responseDueDay, responseDueDisabled, responseDueEmpty } = this.state;
 
     // calculate className for column widths based on number of correction types selected
     console.log("number of correction types selected:" + this.state.selectedCorrectionTypes.length);
@@ -554,7 +576,7 @@ class Tool1 extends Component {
                   </td>
                   <td className="col-8">
                     <form id="step4strategies">
-                      <textarea className="form-control" id="step4strategiesText" name="textarea" value={this.state.step4info} onChange={this.handleTextAreaChange} />
+                      <textarea className="form-control" id="step4strategiesText" name="expectationsSet" value={this.state.step4info} onChange={this.handleTextAreaChange} />
                     </form>
                   </td>
                 </tr>
@@ -564,7 +586,7 @@ class Tool1 extends Component {
                   </td>
                   <td className="col-8">
                     <form id="step4methods">
-                      <textarea className="form-control" id="step4methodsText" name="textarea" value={this.state.step4method} onChange={this.handleTextAreaChange} />
+                      <textarea className="form-control" id="step4methodsText" name="expectationsHow" value={this.state.step4method} onChange={this.handleTextAreaChange} />
                     </form>
                   </td>
                 </tr>
@@ -578,7 +600,7 @@ class Tool1 extends Component {
                 assignedDays: expectationsDay
               }}
             />
-            <p className="my-3">{expectationsDay &&
+            <p className="my-3">Date selected: {expectationsDay &&
               !expectationsDisabled &&
               `${expectationsDay.toLocaleDateString()}`}
             </p>
@@ -629,6 +651,30 @@ class Tool1 extends Component {
                 </tr>
               </tbody>
             </table>
+            <p>If students will have to turn this response assignment back in to you, what will the due date for this assignment be?
+            </p>
+            <DayPickerInput
+              value={responseDueDay}
+              onDayChange={this.handleResponseDueDayChange}
+              dayPickerProps={{
+                assignedDays: assignedDay
+              }}
+            />
+            <p className="my-3">Date selected: {responseDueDay &&
+              !responseDueDisabled &&
+              `${responseDueDay.toLocaleDateString()}`}
+            </p>
+            <p>By when will you hope to return this response assignment to students?
+            </p>
+            <DayPickerInput
+              value={assignedDay}
+              onDayChange={this.handleDayChange}
+              dayPickerProps={{
+                assignedDays: assignedDay
+              }}
+            />
+            <p>In planning these dates, ensure that students will have time to absorb information from this feedback before they are asked to work on any new writing assignments. 
+            </p>
           </div>
           <div className="initiallyHidden" id="step_6">
             <h5>Step 6: Peer WCF (Optional) </h5>

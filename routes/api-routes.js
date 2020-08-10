@@ -445,6 +445,36 @@ app.put("/api/tool1/step_3/:id", function (req, res) {
   });
 })
 
+// Tool 1 - Step 4 Update
+// updates expectationsSet, expectationsHow and expectationsDate
+app.put("/api/tool1/step_4/:id", function (req, res) {
+
+  console.log("Step 4 update function");
+  console.log("The tool 1 id being modified is: " + req.params.id);
+  console.log("req.body" + req.body);
+  
+  db.Tool1.update({
+    expectationsSet: req.body.expectationsSet,
+    expectationsHow: req.body.expectationsHow,
+    expectationsDate: req.body.expectationsDate
+    }, 
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+  .then(function(data) {
+    console.log("DATA IS");
+    console.log(data);
+    res.json({
+      data: data
+    });
+  });
+})
+
+
+
+
 
   // set user's ftu to false
   app.put("/api/user_ftu/:id", function (req, res) {
