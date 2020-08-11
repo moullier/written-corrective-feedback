@@ -52,6 +52,7 @@ class Tool1 extends Component {
     this.handleDueDayChange = this.handleDueDayChange.bind(this);
     this.handleReturnDayChange = this.handleReturnDayChange.bind(this);
     this.handleExpectationsDayChange = this.handleExpectationsDayChange.bind(this);
+    this.handleResponseDueDayChange = this.handleResponseDueDayChange.bind(this);
     this.handleDDChange = this.handleDDChange.bind(this);
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
     this.showNextStep = this.showNextStep.bind(this);
@@ -85,6 +86,25 @@ class Tool1 extends Component {
         console.log(dueDayObj);
         returnDayObj = this.parseDBDate2(returnDay);
         console.log(returnDayObj);
+
+        Axios.get("/api/correction_types/" + tool1ID)
+        .then((ct_res) => {
+          console.log(ct_res.data);
+          
+          // format correction types as an array of strings
+          const correction_types = ct_res.data.map(el => el.category);
+          console.log(correction_types)
+
+          this.setState({
+            toolExistsInDB: dataExists,
+            tool1ID: tool1ID,
+            assignedDay: assignedDayObj,
+            dueDay: dueDayObj,
+            returnDay: returnDayObj,
+            selectedCorrectionTypes: correction_types
+          })
+
+        })
 
       }
 
@@ -478,6 +498,7 @@ class Tool1 extends Component {
             <div className="selectDD">
               <Select 
                 isMulti
+                defaultValue={[correctionOptions[1]]}
                 options={correctionOptions}
                 onChange={this.handleDDChange} // assign onChange function
               />
@@ -527,7 +548,7 @@ class Tool1 extends Component {
               </thead>
               <tbody>
                 <tr className="d-flex">
-                  <td scope="row" className="col-4">
+                  <td className="col-4">
                     Explicit correction
                   </td>
                   <td className="col-4">
@@ -538,7 +559,7 @@ class Tool1 extends Component {
                   </td>
                 </tr>
                 <tr className="d-flex">
-                  <td scope="row" className="col-4">
+                  <td className="col-4">
                     Explicit correction + metalinguistic explanations about their errors
                   </td>
                   <td className="col-4">
