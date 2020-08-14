@@ -10,6 +10,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import "react-day-picker/lib/style.css";
 import Select from 'react-select';
 import Tool1Step0 from "../../components/Tool1Step0";
+import Choices from "../../components/Choices";
 
 
 class Tool1 extends Component {
@@ -314,6 +315,12 @@ class Tool1 extends Component {
     this.setState({fieldName: e.target.value});
   }
 
+  // handles callback from Choices child component
+  changeHandler = (childData) => {
+    this.setState({selectedCorrectionTypes: childData})
+  }
+
+
   render() {
     const { assignedDay, isDisabled, isEmpty } = this.state;
     const { dueDay, dueDisabled, dueEmpty } = this.state;
@@ -338,21 +345,38 @@ class Tool1 extends Component {
     </tr> : "";
 
 
+    // const correctionOptions = [
+    //   { value: 'Verb Form (conjugation)', label: 'Verb Form (conjugation)'},
+    //   { value: 'Verb Tense (time, aspect or mode)', label: 'Verb Tense (time, aspect or mode)'},
+    //   { value: 'Sentence Structure', label: 'Sentence Structure' },
+    //   { value: 'Word Order', label: 'Word Order' },
+    //   { value: 'Word Choice', label: 'Word Choice' },
+    //   { value: 'Prepositions', label: 'Prepositions' },
+    //   { value: 'Word Form', label: 'Word Form' },
+    //   { value: 'Spelling', label: 'Spelling' },
+    //   { value: 'Punctuation', label: 'Punctuation' },
+    //   { value: 'Capital Letter', label: 'Capital Letter' },
+    //   { value: 'Insert something', label: 'Insert something' },
+    //   { value: 'Omit something', label: 'Omit something' },
+    //   { value: 'Meaning is not clear', label: 'Meaning is not clear' },
+    //   { value: 'Awkward', label: 'Awkward' }                  
+    // ]
+
     const correctionOptions = [
-      { value: 'Verb Form (conjugation)', label: 'Verb Form (conjugation)'},
-      { value: 'Verb Tense (time, aspect or mode)', label: 'Verb Tense (time, aspect or mode)'},
-      { value: 'Sentence Structure', label: 'Sentence Structure' },
-      { value: 'Word Order', label: 'Word Order' },
-      { value: 'Word Choice', label: 'Word Choice' },
-      { value: 'Prepositions', label: 'Prepositions' },
-      { value: 'Word Form', label: 'Word Form' },
-      { value: 'Spelling', label: 'Spelling' },
-      { value: 'Punctuation', label: 'Punctuation' },
-      { value: 'Capital Letter', label: 'Capital Letter' },
-      { value: 'Insert something', label: 'Insert something' },
-      { value: 'Omit something', label: 'Omit something' },
-      { value: 'Meaning is not clear', label: 'Meaning is not clear' },
-      { value: 'Awkward', label: 'Awkward' }                  
+      'Verb Form (conjugation)',
+      'Verb Tense (time, aspect or mode)',
+      'Sentence Structure',
+      'Word Order',
+      'Word Choice',
+      'Prepositions',
+      'Word Form',
+      'Spelling',
+      'Punctuation',
+      'Capital Letter',
+      'Insert something',
+      'Omit something',
+      'Meaning is not clear',
+      'Awkward'              
     ]
 
     const directnessOptions = [
@@ -495,15 +519,16 @@ class Tool1 extends Component {
               <p>Select 3-6 error types that you will focus your corrections on for this assignment and write them into the table below. Choose carefully: you won’t be able to annotate student errors outside of these categories in any way. </p>
               <p>Here are a few examples drawn from Kurzer (2019) to get you started. Feel free to choose the ones that work best for this assignment and your institutional setting, or write your own.</p>
             </div>
-            <div className="selectDD">
+            {/* <div className="selectDD">
               <Select 
                 isMulti
                 defaultValue={[correctionOptions[1]]}
                 options={correctionOptions}
                 onChange={this.handleDDChange} // assign onChange function
               />
-            </div>
+            </div> */}
             {/* <div><b>Selected Value: </b> {JSON.stringify(this.state.selectedCorrectionTypes, null, 2)}</div> */}
+            <Choices initialChoices={correctionOptions} onChange={this.changeHandler}/>
             <div className="d-flex justify-content-center container-fluid mt-5">
               <table className="table selectedCorrectionsTable">
                 <thead className="thead-light">
