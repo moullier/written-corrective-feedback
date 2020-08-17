@@ -85,6 +85,14 @@ constructor(props) {
     render() {
     return (
       <div className="container">
+        <div id="displaySelectedDiv">
+          <strong>Selected {this.props.choiceName}:</strong>
+          <ul>
+          {this.state.selectedChoices.map((element, index) => (
+            <li>{element}</li>
+          ))}
+          </ul>
+        </div>
         <div className="row  d-flex justify-content-center">
           {this.state.listOfChoices.map((element, index) => (
             <div className="col-12 col-sm-4 shadow-sm p-3 m-2 bg-white rounded contentDiv" key={index} value={element} id={"div" + index} onClick={this.toggleSelection}>
@@ -103,15 +111,6 @@ constructor(props) {
             <button className="btn btn-primary" onClick={this.addChoice}>Add New Choice</button>
           </div>
         </div>
-        <div>
-          <strong>Selected Choices:</strong>
-          <ul>
-          {this.state.selectedChoices.map((element, index) => (
-            <li>{element}</li>
-          ))}
-          </ul>
-        </div>
-  
       </div>
   )}
 }

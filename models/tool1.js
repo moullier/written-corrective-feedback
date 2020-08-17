@@ -1,5 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
     let Tool1 = sequelize.define("Tool1", {
+        // step 1 dates:
         dateAssigned: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -12,10 +13,26 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: true
         },
+        // step 4 dates:
         expectationsDate: {
             type: DataTypes.DATE,
             allowNull: true
         },
+        // step 5 dates:
+        responseDueDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        responseReturnDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        // step 6 dates:
+        peerWCFDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        // has tool been finished?
         completed: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

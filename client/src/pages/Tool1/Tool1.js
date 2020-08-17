@@ -32,21 +32,31 @@ class Tool1 extends Component {
       toolExistsInDB: undefined,
       tool1ID: null,
       // state for dayPicker components
+      // step 1 dates:
       assignedDay: undefined,
       dueDay: undefined,
       returnDay: undefined,
-      expectationsDay: undefined,
       isEmpty: true,
       isDisabled: false,
       dueEmpty: true,
       dueDisabled: false,
       returnEmpty: true,
       returnDisabled: false,
+      // step 4 dates:
+      expectationsDay: undefined,
       expectationsEmpty: true,
       expectationsDisabled: false,
+      // step 5 dates:
       responseDueDay: undefined,
       responseDueEmpty: true,
       responseDueDisabled: false,
+      responseReturnDay: undefined,
+      responseReturnEmpty: true,
+      responseReturnDisabled: false,
+      // step 6 dates:
+      peerWCFDay: undefined,
+      peerWCFEmpty: true,
+      peerWCFDisabled: false
     }
 
     this.handleDayChange = this.handleDayChange.bind(this);
@@ -70,8 +80,8 @@ class Tool1 extends Component {
       console.log(tool1data.data);
       let dataExists = false;
       let tool1ID = null;
-      let assignedDay, dueDay, returnDay;
-      let dueDayObj, assignedDayObj, returnDayObj;
+      let assignedDay, dueDay, returnDay, expectationsDay, responseDueDay;
+      let dueDayObj, assignedDayObj, returnDayObj, expectationsDayObj, responseDueDayObj;
       
       // if a database record exists for the tool, parse the dates and set the state
       if(tool1data.data) {
@@ -80,13 +90,37 @@ class Tool1 extends Component {
         assignedDay = tool1data.data.dateAssigned;
         dueDay = tool1data.data.dueDate;
         returnDay = tool1data.data.returnDate;
+        expectationsDay = tool1data.data.expectationsDate;
+        responseDueDay = tool1data.data.responseDueDate;
+        
+        // responseDueDay = tool1data.data.
 
-        assignedDayObj = this.parseDBDate2(assignedDay);
-        console.log(assignedDayObj);
-        dueDayObj = this.parseDBDate2(dueDay);
-        console.log(dueDayObj);
-        returnDayObj = this.parseDBDate2(returnDay);
-        console.log(returnDayObj);
+        // check if date returned from database is null
+        if(assignedDay) {
+          assignedDayObj = this.parseDBDate2(assignedDay);
+          console.log(assignedDayObj);
+        } else {
+          assignedDayObj = undefined;
+        }
+
+        // check if date returned from database is null
+        if(dueDay) {
+          dueDayObj = this.parseDBDate2(dueDay);
+          console.log(dueDayObj);
+        } else {
+          dueDayObj = undefined;
+        }
+
+        // check if date returned from database is null
+        if(returnDay) {
+          returnDayObj = this.parseDBDate2(returnDay);
+          console.log(returnDayObj);
+        } else {
+          returnDayObj = undefined;
+        }
+
+
+
 
         Axios.get("/api/correction_types/" + tool1ID)
         .then((ct_res) => {
@@ -94,7 +128,7 @@ class Tool1 extends Component {
           
           // format correction types as an array of strings
           const correction_types = ct_res.data.map(el => el.category);
-          console.log(correction_types)
+          console.log(correction_types);
 
           this.setState({
             toolExistsInDB: dataExists,
@@ -196,6 +230,25 @@ class Tool1 extends Component {
     });
   }
 
+  handleResponseReturnDayChange(responseReturnDay, modifiers, dayPickerInput) {
+    const input = dayPickerInput.getInput();
+    this.setState({
+      responseReturnDay,
+      responseReturnEmpty: !input.value.trim(),
+      responseReturnDisabled: modifiers.disabled === true,
+    });
+  }
+
+  handlePeerWCFChange(peerWCFDay, modifiers, dayPickerInput) {
+    const input = dayPickerInput.getInput();
+    this.setState({
+      peerWCFDay,
+      peerWCFEmpty: !input.value.trim(),
+      peerWCFDisabled: modifiers.disabled === true,
+    });  
+  }
+
+
   // hide the current step and show the next one
   // save data to db
   showNextStep(e) {
@@ -262,6 +315,9 @@ class Tool1 extends Component {
             expectationsHow: this.state.expectationsHow,
             expectationsDate: this.state.expectationsDay
           };
+          break;
+        case 5:
+          console.log("updating on step 5");
           
     
       }
@@ -327,6 +383,8 @@ class Tool1 extends Component {
     const { returnDay, returnDisabled, returnEmpty } = this.state;
     const { expectationsDay, expectationsDisabled, expectationsEmpty } = this.state;
     const { responseDueDay, responseDueDisabled, responseDueEmpty } = this.state;
+    const { responseReturnDay, responseReturnDisabled, responseReturnEmpty } = this.state;
+    const { peerWCFDay, peerWCFDisabled, peerWCFEmpty} = this.state;
 
     // calculate className for column widths based on number of correction types selected
     console.log("number of correction types selected:" + this.state.selectedCorrectionTypes.length);
@@ -528,7 +586,11 @@ class Tool1 extends Component {
               />
             </div> */}
             {/* <div><b>Selected Value: </b> {JSON.stringify(this.state.selectedCorrectionTypes, null, 2)}</div> */}
-            <Choices initialChoices={correctionOptions} onChange={this.changeHandler}/>
+            <Choices
+              initialChoices={correctionOptions}
+              choiceName={"Correction Types"}
+              onChange={this.changeHandler}
+            />
             <div className="d-flex justify-content-center container-fluid mt-5">
               <table className="table selectedCorrectionsTable">
                 <thead className="thead-light">
@@ -703,7 +765,7 @@ class Tool1 extends Component {
               value={responseDueDay}
               onDayChange={this.handleResponseDueDayChange}
               dayPickerProps={{
-                assignedDays: assignedDay
+                assignedDays: responseDueDay
               }}
             />
             <p className="my-3">Date selected: {responseDueDay &&
@@ -713,20 +775,40 @@ class Tool1 extends Component {
             <p>By when will you hope to return this response assignment to students?
             </p>
             <DayPickerInput
-              value={assignedDay}
-              onDayChange={this.handleDayChange}
+              value={responseReturnDay}
+              id={"responseReturnDay"}
+              onDayChange={this.handleResponseReturnDayChange}
               dayPickerProps={{
-                assignedDays: assignedDay
+                assignedDays: responseReturnDay
               }}
             />
+            <p className="my-3">Date selected: {responseReturnDay &&
+              !responseReturnDisabled &&
+              `${responseReturnDay.toLocaleDateString()}`}
+            </p>
             <p>In planning these dates, ensure that students will have time to absorb information from this feedback before they are asked to work on any new writing assignments. 
             </p>
           </div>
           <div className="initiallyHidden" id="step_6">
             <h5>Step 6: Peer WCF (Optional) </h5>
-            <p>In this final optional step, consider whether or not students will be providing WCF to each other before they submit the assignment by the deadline you set in Step 1. Lee (2019) recommends that students determine 1-2 error categories that they find personally difficult and have peers provide feedback on only those categories on a draft version of their assignment.  </p>
+            <p>In this final optional step, consider whether or not students will be providing WCF to each other before they submit the assignment by the deadline you set in Step 1. Lee (2019) recommends that students determine 1-2 error categories that they find personally difficult and have peers provide feedback on only those categories on a draft version of their assignment.</p>
+            <p>If you are having students work through peer WCF activities: what is a good date for them to do so? Remember that students will need time to complete a draft of the assignment and time to edit their work in response to peer WCF.</p>
+            <DayPickerInput
+              value={peerWCFDay}
+              onDayChange={this.handlePeerWCFChange}
+              dayPickerProps={{
+                assignedDays: peerWCFDay
+              }}
+            />
+            <p className="my-3">Date selected: {peerWCFDay &&
+              !peerWCFDisabled &&
+              `${peerWCFDay.toLocaleDateString()}`}
+            </p>
+            <p>
+            That’s it! Now that you’ve completed this blueprint, you now have a clear WCF strategy and a sense of how each component of your writing assignment will be paced from beginning to end.
+            </p>
           </div>
-          <button className="btn btn-primary mr-3" value="1" onClick={this.showNextStep}>Next Step</button>
+          <button className="btn btn-primary mr-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
           <br />
           <Link to={{
             pathname: "/assignment",
