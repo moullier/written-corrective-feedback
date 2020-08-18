@@ -64,6 +64,8 @@ class Tool1 extends Component {
     this.handleReturnDayChange = this.handleReturnDayChange.bind(this);
     this.handleExpectationsDayChange = this.handleExpectationsDayChange.bind(this);
     this.handleResponseDueDayChange = this.handleResponseDueDayChange.bind(this);
+    this.handleResponseReturnDayChange = this.handleResponseReturnDayChange.bind(this);
+    this.handlePeerWCFChange = this.handlePeerWCFChange.bind(this);
     this.handleDDChange = this.handleDDChange.bind(this);
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
     this.showNextStep = this.showNextStep.bind(this);
@@ -80,8 +82,10 @@ class Tool1 extends Component {
       console.log(tool1data.data);
       let dataExists = false;
       let tool1ID = null;
-      let assignedDay, dueDay, returnDay, expectationsDay, responseDueDay;
-      let dueDayObj, assignedDayObj, returnDayObj, expectationsDayObj, responseDueDayObj;
+      let assignedDay, dueDay, returnDay, expectationsDay, responseDueDay, responseReturnDay, peerWCFDay;
+      let dueDayObj, assignedDayObj, returnDayObj, expectationsDayObj, responseDueDayObj, responseReturnDayObj, peerWCFDayObj;
+
+      console.log(peerWCFDayObj);
       
       // if a database record exists for the tool, parse the dates and set the state
       if(tool1data.data) {
@@ -92,8 +96,8 @@ class Tool1 extends Component {
         returnDay = tool1data.data.returnDate;
         expectationsDay = tool1data.data.expectationsDate;
         responseDueDay = tool1data.data.responseDueDate;
-        
-        // responseDueDay = tool1data.data.
+        responseReturnDay = tool1data.data.responseReturnDate;
+        peerWCFDay = tool1data.data.peerWCFDate;
 
         // check if date returned from database is null
         if(assignedDay) {
@@ -119,8 +123,29 @@ class Tool1 extends Component {
           returnDayObj = undefined;
         }
 
+        // check if date returned from database is null
+        if(expectationsDay) {
+          expectationsDayObj = this.parseDBDate2(expectationsDay);
+          console.log(expectationsDayObj);
+        }
 
+        // check if date returned from database is null
+        if(responseDueDay) {
+          responseDueDayObj = this.parseDBDate2(responseDueDay);
+          console.log(responseDueDayObj);
+        }
+        
+        // check if date returned from database is null
+        if(responseReturnDay) {
+          responseReturnDayObj = this.parseDBDate2(responseReturnDay);
+          console.log(responseReturnDayObj);
+        }
 
+        // check if date returned from database is null
+        if(peerWCFDay) {
+          peerWCFDayObj = this.parseDBDate2(peerWCFDay);
+          console.log(peerWCFDayObj);
+        }
 
         Axios.get("/api/correction_types/" + tool1ID)
         .then((ct_res) => {
@@ -318,7 +343,12 @@ class Tool1 extends Component {
           break;
         case 5:
           console.log("updating on step 5");
-          
+          updateObject = {
+            expectationsSet: this.state.expectationsSet,
+            expectationsHow: this.state.expectationsHow,
+            expectationsDate: this.state.expectationsDay
+          };
+          break;
     
       }
 
@@ -368,7 +398,7 @@ class Tool1 extends Component {
 
   handleTextAreaChange(e) {
     const fieldName = e.target.name;
-    this.setState({fieldName: e.target.value});
+    this.setState({[fieldName]: e.target.value});
   }
 
   // handles callback from Choices child component

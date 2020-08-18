@@ -451,7 +451,8 @@ app.put("/api/tool1/step_4/:id", function (req, res) {
 
   console.log("Step 4 update function");
   console.log("The tool 1 id being modified is: " + req.params.id);
-  console.log("req.body" + req.body);
+  console.log("req.body:");
+  console.log(req.body);
   console.log(req.body.expectationsSet);
   console.log(req.body.expectationsHow);
   
@@ -466,8 +467,6 @@ app.put("/api/tool1/step_4/:id", function (req, res) {
       }
     })
   .then(function(data) {
-    console.log("DATA IS");
-    console.log(data);
     res.json({
       data: data
     });
