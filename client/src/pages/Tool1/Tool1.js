@@ -91,6 +91,8 @@ class Tool1 extends Component {
       if(tool1data.data) {
         dataExists = true;
         tool1ID = tool1data.data.id;
+
+        // all dates retrieved
         assignedDay = tool1data.data.dateAssigned;
         dueDay = tool1data.data.dueDate;
         returnDay = tool1data.data.returnDate;
@@ -98,6 +100,12 @@ class Tool1 extends Component {
         responseDueDay = tool1data.data.responseDueDate;
         responseReturnDay = tool1data.data.responseReturnDate;
         peerWCFDay = tool1data.data.peerWCFDate;
+
+        // other data retreived
+        let directnessLevel = tool1data.data.directnessLevel;
+        console.log(directnessLevel);
+        let expectationsSet = tool1data.data.expectationsSet;
+        let expectationsHow = tool1data.data.expectationsHow;
 
         // check if date returned from database is null
         if(assignedDay) {
@@ -161,20 +169,25 @@ class Tool1 extends Component {
             assignedDay: assignedDayObj,
             dueDay: dueDayObj,
             returnDay: returnDayObj,
-            selectedCorrectionTypes: correction_types
+            expectationsDay: expectationsDayObj,
+            responseDueDay: responseDueDayObj,
+            responseReturnDay: responseReturnDayObj,
+            peerWCFDay: peerWCFDayObj,
+            selectedCorrectionTypes: correction_types,
+            directnessLevel: directnessLevel,
+            expectationsSet: expectationsSet,
+            expectationsHow: expectationsHow
           })
 
         })
 
+      } else {
+        // no data yet exists in database for this tool1
+        this.setState({
+          toolExistsInDB: false,
+        })
       }
 
-      this.setState({
-        toolExistsInDB: dataExists,
-        tool1ID: tool1ID,
-        assignedDay: assignedDayObj,
-        dueDay: dueDayObj,
-        returnDay: returnDayObj
-      })
     })
     .catch((err) => {
       console.log("I am an error");
@@ -211,6 +224,8 @@ class Tool1 extends Component {
 
   handleDayChange(assignedDay, modifiers, dayPickerInput) {
     const input = dayPickerInput.getInput();
+
+    console.log(assignedDay);
     this.setState({
       assignedDay,
       isEmpty: !input.value.trim(),
@@ -618,6 +633,7 @@ class Tool1 extends Component {
             {/* <div><b>Selected Value: </b> {JSON.stringify(this.state.selectedCorrectionTypes, null, 2)}</div> */}
             <Choices
               initialChoices={correctionOptions}
+              selectedChoices={this.state.selectedCorrectionTypes}
               choiceName={"Correction Types"}
               onChange={this.changeHandler}
             />
@@ -691,6 +707,7 @@ class Tool1 extends Component {
               <Select 
                 options={directnessOptions}
                 onChange={this.handleDirectnessChange} // assign onChange function
+                // defaultValue={{ label: this.state.directnessLevel, value: this.state.directnessLevel }}
               />
             </div>
             <a href="https://www.coe.int/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank">More Information</a>
@@ -838,7 +855,7 @@ class Tool1 extends Component {
             That’s it! Now that you’ve completed this blueprint, you now have a clear WCF strategy and a sense of how each component of your writing assignment will be paced from beginning to end.
             </p>
           </div>
-          <button className="btn btn-primary mr-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
+          <button className="btn btn-primary mr-3 mt-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
           <br />
           <Link to={{
             pathname: "/assignment",

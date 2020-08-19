@@ -12,7 +12,8 @@ constructor(props) {
     this.state = {
       newChoice: "",
       listOfChoices: props.initialChoices,
-      selectedChoices: []
+      selectedChoices: [],
+      initialToggleComplete: false
     }
   
     this.toggleSelection = this.toggleSelection.bind(this);
@@ -22,7 +23,71 @@ constructor(props) {
   }
 
   componentDidMount() {
-    console.log(this.props.initialChoices)
+    console.log(this.props.initialChoices);
+    console.log(this.props.selectedChoices);
+  }
+
+  componentDidUpdate() {
+    console.log(this.props.initialChoices);
+    console.log(this.props.selectedChoices);
+
+    if(this.props.selectedChoices && !this.state.initialToggleComplete) {
+      this.toggleList();
+    }
+
+  }
+
+  toggleList() {
+
+    // for(let i = 0; i < this.props.initialChoices.length; i++) {
+    //   console.log("initialChoices index = " + i);
+    //   console.log("element:");
+    //   console.log(this.props.initialChoices[i]);
+    // }
+
+    // for(let i = 0; i < this.props.selectedChoices.length; i++) {
+    //   console.log("selectedChoices index = " + i);
+    //   console.log("element:");
+    //   console.log(this.props.selectedChoices[i]);
+    // }
+
+    console.log("**************");
+    console.log("Hopefully running this only one time, with an array of choices");
+
+    let arrayOfIndices = [];
+    let currentList = this.state.listOfChoices;
+
+    this.props.selectedChoices.forEach(element => {
+      console.log(element);
+
+      // check to see if selected choice is in the initial list
+      let index = currentList.indexOf(element);
+     
+      if(index !== -1) {
+        arrayOfIndices.push(index);
+      } else {
+        // need to add this item to the current list
+        currentList.push(element);
+        index = this.state.listOfChoices.indexOf(element);
+        arrayOfIndices.push(index);
+      }
+    });
+
+    console.log(arrayOfIndices);
+
+    this.setState({
+      initialToggleComplete: true,
+      listOfChoices: currentList,
+      selectedChoices: this.props.selectedChoices
+    }, () => {
+      arrayOfIndices.forEach(element => {
+        if(element >= 0) {
+          let selector = "#div" + element;
+          console.log(selector);
+          $(selector).addClass("border border-primary");
+        }
+      });
+    });
   }
   
   toggleSelection(e) {
@@ -83,16 +148,19 @@ constructor(props) {
     }
   
     render() {
+
+      let currentlySelected = this.props.selectedChoices ? <div id="displaySelectedDiv">
+        <strong>Selected {this.props.choiceName}:</strong>
+        <ul>
+          {this.props.selectedChoices.map((element, index) => (
+        <li>{element}</li>
+      ))}
+      </ul>
+      </div> : "";
+
     return (
       <div className="container">
-        <div id="displaySelectedDiv">
-          <strong>Selected {this.props.choiceName}:</strong>
-          <ul>
-          {this.state.selectedChoices.map((element, index) => (
-            <li>{element}</li>
-          ))}
-          </ul>
-        </div>
+          {currentlySelected}
         <div className="row  d-flex justify-content-center">
           {this.state.listOfChoices.map((element, index) => (
             <div className="col-12 col-sm-4 shadow-sm p-3 m-2 bg-white rounded contentDiv" key={index} value={element} id={"div" + index} onClick={this.toggleSelection}>
