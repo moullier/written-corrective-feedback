@@ -38,6 +38,10 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             defaultValue: false
         },
+        studentProficiencyLevel: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         directnessLevel: {
             type: DataTypes.STRING,
             allowNull: true
@@ -49,8 +53,11 @@ module.exports = function(sequelize, DataTypes) {
         expectationsHow: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        studentResponseAssignment: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
-
     });
 
     Tool1.associate = function(models) {

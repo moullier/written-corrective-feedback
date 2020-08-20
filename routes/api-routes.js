@@ -314,11 +314,6 @@ module.exports = function (app) {
   })
 
 
-
-
-
-
-
   // PUT ROUTES
 
   // update user institution
@@ -429,6 +424,7 @@ app.put("/api/tool1/step_3/:id", function (req, res) {
   console.log("req.body" + req.body);
   
   db.Tool1.update({
+      studentProficiencyLevel: req.body.studentProficiencyLevel,
       directnessLevel: req.body.directnessLevel
     }, 
     {
@@ -482,13 +478,14 @@ app.put("/api/tool1/step_5/:id", function (req, res) {
   console.log("The tool 1 id being modified is: " + req.params.id);
   console.log("req.body:");
   console.log(req.body);
-  console.log(req.body.expectationsSet);
-  console.log(req.body.expectationsHow);
+  console.log(req.body.responseDueDate);
+  console.log(req.body.responseReturnDate);
+  console.log(req.body.studentResponseAssignment);
   
   db.Tool1.update({
-    expectationsSet: req.body.expectationsSet,
-    expectationsHow: req.body.expectationsHow,
-    expectationsDate: req.body.expectationsDate
+      responseDueDate: req.body.responseDueDate,
+      responseReturnDate: req.body.responseReturnDate,
+      studentResponseAssignment: req.body.studentResponseAssignment
     }, 
     {
       where: {
@@ -502,7 +499,30 @@ app.put("/api/tool1/step_5/:id", function (req, res) {
   });
 })
 
+// Tool 1 - Step 6 Update
+// updates peerWCFDate
+app.put("/api/tool1/step_6/:id", function (req, res) {
 
+  console.log("Step 6 update function");
+  console.log("The tool 1 id being modified is: " + req.params.id);
+  console.log("req.body:");
+  console.log(req.body);
+  console.log(req.body.peerWCFDate);
+  
+  db.Tool1.update({
+    peerWCFDate: req.body.peerWCFDate,
+    }, 
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+  .then(function(data) {
+    res.json({
+      data: data
+    });
+  });
+})
 
 
   // set user's ftu to false

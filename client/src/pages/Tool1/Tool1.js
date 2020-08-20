@@ -26,11 +26,15 @@ class Tool1 extends Component {
       classTitle: this.props.location.state.classTitle,
       assignmentId: this.props.location.state.assignmentId,
       assignmentTitle: this.props.location.state.assignmentTitle,
-      activeStep: 0,
-      selectedCorrectionTypes: [],
-      directnessLevel: undefined,
       toolExistsInDB: undefined,
       tool1ID: null,
+      activeStep: 0,
+      completed: false,
+      // step 2 information
+      selectedCorrectionTypes: [],
+      // step 3 information
+      studentProficiencyLevel: undefined,
+      directnessLevel: undefined,
       // state for dayPicker components
       // step 1 dates:
       assignedDay: undefined,
@@ -70,6 +74,7 @@ class Tool1 extends Component {
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
     this.showNextStep = this.showNextStep.bind(this);
     this.handleDirectnessChange = this.handleDirectnessChange.bind(this);
+    this.handleStudentProficiencyChange = this.handleStudentProficiencyChange.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -102,10 +107,16 @@ class Tool1 extends Component {
         peerWCFDay = tool1data.data.peerWCFDate;
 
         // other data retreived
-        let directnessLevel = tool1data.data.directnessLevel;
+        const {studentProficiencyLevel, directnessLevel, expectationsSet,
+          expectationsHow, completed} = tool1data.data;
+        // const directnessLevel = tool1data.data.directnessLevel;
         console.log(directnessLevel);
-        let expectationsSet = tool1data.data.expectationsSet;
-        let expectationsHow = tool1data.data.expectationsHow;
+        // const expectationsSet = tool1data.data.expectationsSet;
+        // const expectationsHow = tool1data.data.expectationsHow;
+        // const completed = tool1data.data.completed;
+
+        // const {id,title} = post.data
+
 
         // check if date returned from database is null
         if(assignedDay) {
@@ -174,6 +185,7 @@ class Tool1 extends Component {
             responseReturnDay: responseReturnDayObj,
             peerWCFDay: peerWCFDayObj,
             selectedCorrectionTypes: correction_types,
+            studentProficiencyLevel: studentProficiencyLevel,
             directnessLevel: directnessLevel,
             expectationsSet: expectationsSet,
             expectationsHow: expectationsHow
@@ -345,6 +357,7 @@ class Tool1 extends Component {
         case 3:
           console.log("updating on step 3");
           updateObject = {
+            studentProficiencyLevel: this.state.studentProficiencyLevel,
             directnessLevel: this.state.directnessLevel
           };
           break;
@@ -359,10 +372,19 @@ class Tool1 extends Component {
         case 5:
           console.log("updating on step 5");
           updateObject = {
-            expectationsSet: this.state.expectationsSet,
-            expectationsHow: this.state.expectationsHow,
-            expectationsDate: this.state.expectationsDay
+            studentResponseAssignment: this.state.studentResponseAssignment,
+            responseDueDate: this.state.responseDueDay,
+            responseReturnDate: this.state.responseReturnDay
           };
+          break;
+        case 6:
+          console.log("updating button text?");
+          $("#nextStepButton").text("Finish and Save");
+          updateObject = {
+            peerWCFDate: this.state.peerWCFDay
+          };
+          break;
+        default:
           break;
     
       }
@@ -380,6 +402,18 @@ class Tool1 extends Component {
 
           if(this.state.activeStep === 1) {
             $("#step_0").hide();
+          } else if(this.state.activeStep === 6) {
+            // go to back to assignment hub page
+            this.props.history.push({
+              pathname: "/assignment",
+              state: { 
+                uid: this.props.location.state.uid,
+                classId: this.props.location.state.classId,
+                classTitle: this.props.location.state.classTitle,
+                assignmentId: this.props.location.state.assignmentId,
+                assignmentTitle: this.props.location.state.assignmentTitle
+              }
+            });
           }
           $(currentStepString).hide();
           $(nextStepString).show();
@@ -409,6 +443,19 @@ class Tool1 extends Component {
   handleDirectnessChange(e) {
     console.log(e.value);
     this.setState({directnessLevel: e.value});
+  }
+
+  handleStudentProficiencyChange(e) {
+    console.log(e.value);
+    this.setState({studentProficiencyLevel: e.value},
+      () => {
+        $("#selectDirectnessDiv").show();
+      });
+  }
+
+  handleStudentResponseAssignmentChange(e) {
+    console.log(e.value);
+    this.setState({studentResponseAssignment: e.value});
   }
 
   handleTextAreaChange(e) {
@@ -480,15 +527,58 @@ class Tool1 extends Component {
       'Omit something',
       'Meaning is not clear',
       'Awkward'              
-    ]
+    ];
 
-    const directnessOptions = [
+    const studentProficiencyLevels = [
+      { value: 'Novice (A1 and A2)', label: 'Novice (A1 and A2)'},
+      { value: 'Intermediate (B1 and B2)', label: 'Intermediate (B1 and B2)'},
+      { value: 'Advanced (B2+ and C1)', label: 'Advanced (B2+ and C1)'}
+    ];
+
+    let directnessOptions = [
       { value: 'Explicit correction', label: 'Explicit correction'},
       { value: 'Explicit correction + metalinguistic explanations', label: 'Explicit correction + metalinguistic explanations'},
       { value: 'Underlining location of errors + metalinguistic explanations', label: 'Underlining location of errors + metalinguistic explanations'},
       { value: 'Underlining location of errors + use of a correction code', label: 'Underlining location of errors + use of a correction code'},
       { value: 'Underlining location of errors', label: 'Underlining location of errors' }
-    ]
+    ];
+
+    if(this.state.studentProficiencyLevel === "Novice (A1 and A2)") {
+      directnessOptions = [
+        { value: 'Explicit correction', label: 'Explicit correction'},
+        { value: 'Explicit correction + metalinguistic explanations', label: 'Explicit correction + metalinguistic explanations'}
+      ];
+    } else if (this.state.studentProficiencyLevel === 'Intermediate (B1 and B2)') {
+      directnessOptions = [
+        { value: 'Underlining location of errors + metalinguistic explanations', label: 'Underlining location of errors + metalinguistic explanations'},
+        { value: 'Underlining location of errors + use of a correction code', label: 'Underlining location of errors + use of a correction code'}
+      ];
+    } else if(this.state.studentProficiencyLevel === 'Advanced (B2+ and C1)') {
+      directnessOptions = [
+        { value: 'Underlining location of errors', label: 'Underlining location of errors' }
+      ]
+    }
+
+    let studentResponseAssignments = [];
+
+    if(this.state.studentProficiencyLevel === "Novice (A1 and A2)") {
+      let studentResponseAssignments = [
+        { value: "Personal log of frequency of errors by type", label: "Personal log of frequency of errors by type" },
+        { value: "Revise text based on instructor corrections", label: "Revise text based on instructor corrections"},
+        { value: "Personal reflection on errors", label: "Personal reflection on errors"},
+        { value: "Other assignment based on errors", label: "Other assignment based on errors"}
+      ];
+    } else {
+      let studentResponseAssignments = [
+        { value: "Personal log of frequency of errors by type", label: "Personal log of frequency of errors by type" },
+        { value: "Revise text based on self-correction", label: "Revise text based on self-correction"},
+        { value: "Personal reflection on errors", label: "Personal reflection on errors"},
+        { value: "Other assignment based on errors", label: "Other assignment based on errors"}
+      ];
+    }
+
+
+
 
     // let languageProficiencyModal = <div className="modal" id="languageProficiencyModal" tabIndex="-1" role="dialog">
     //   <div className="modal-dialog" role="document">
@@ -665,8 +755,7 @@ class Tool1 extends Component {
           </div>
           <div className="initiallyHidden" id="step_3">
             <h5>Step 3: Determining the Directness of Feedback</h5>
-            <p>Using the expected language proficiency of the average learner as a guide, select the type of focused feedback students will receive on this assignment.</p>
-            <table className="table feedbackTable">
+            {/* <table className="table feedbackTable">
               <thead className="thead-light">
                 <tr className="d-flex">
                   <th scope="col" className="col-4">Novice (A1 and A2)</th>
@@ -702,15 +791,23 @@ class Tool1 extends Component {
                   </td>
                 </tr>
               </tbody>
-            </table>
+            </table> */}
+            <p>You can use the expected language proficiency of the average learner as a guide to select the type of focused feedback students will receive on this assignment.</p>
+            <p>What is the expected language proficiency of students in this class? For more information you can reference the <a href="https://www.coe.int/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank">Common European Framework</a>.</p>
             <div className="selectDD">
+              <Select 
+                options={studentProficiencyLevels}
+                onChange={this.handleStudentProficiencyChange} // assign onChange function
+              />
+            </div>
+            <div className="selectDD initiallyHidden" id="selectDirectnessDiv">
+              <p>Choose the type of focused feedback that students will receive on this assignment:</p>
               <Select 
                 options={directnessOptions}
                 onChange={this.handleDirectnessChange} // assign onChange function
                 // defaultValue={{ label: this.state.directnessLevel, value: this.state.directnessLevel }}
               />
             </div>
-            <a href="https://www.coe.int/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank">More Information</a>
             {/* <button className="btn btn-link mb-3" data-toggle="modal" data-target="#languageProficiencyModal">See More Info</button>
           {languageProficiencyModal} */}
 
@@ -731,7 +828,7 @@ class Tool1 extends Component {
                   </td>
                   <td className="col-8">
                     <form id="step4strategies">
-                      <textarea className="form-control" id="step4strategiesText" name="expectationsSet" value={this.state.step4info} onChange={this.handleTextAreaChange} />
+                      <textarea className="form-control" id="step4strategiesText" name="expectationsSet" value={this.state.expectationsSet} onChange={this.handleTextAreaChange} />
                     </form>
                   </td>
                 </tr>
@@ -741,7 +838,7 @@ class Tool1 extends Component {
                   </td>
                   <td className="col-8">
                     <form id="step4methods">
-                      <textarea className="form-control" id="step4methodsText" name="expectationsHow" value={this.state.step4method} onChange={this.handleTextAreaChange} />
+                      <textarea className="form-control" id="step4methodsText" name="expectationsHow" value={this.state.expectationsHow} onChange={this.handleTextAreaChange} />
                     </form>
                   </td>
                 </tr>
@@ -764,7 +861,7 @@ class Tool1 extends Component {
             <h5>Step 5: Determine What Learners Will Have to Do In Response to Your WCF Strategy</h5>
             <p>Select one or several tasks that learners will have to complete after receiving your WCF.</p>
             <h6 className="mt-5">Possible Student Responses to Instructor WCF</h6>
-            <table className="table">
+            <table className="table my-3">
               <thead className="thead-light">
                 <tr className="d-flex">
                   <th scope="col" className="col-6">Direct Feedback</th>
@@ -806,6 +903,13 @@ class Tool1 extends Component {
                 </tr>
               </tbody>
             </table>
+            <p>Select task:</p>
+            <div className="selectDD">
+              <Select 
+                options={studentResponseAssignments}
+                onChange={this.handleStudentResponseAssignmentChange} // assign onChange function
+              />
+            </div>
             <p>If students will have to turn this response assignment back in to you, what will the due date for this assignment be?
             </p>
             <DayPickerInput
