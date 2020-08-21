@@ -75,6 +75,7 @@ class Tool1 extends Component {
     this.showNextStep = this.showNextStep.bind(this);
     this.handleDirectnessChange = this.handleDirectnessChange.bind(this);
     this.handleStudentProficiencyChange = this.handleStudentProficiencyChange.bind(this);
+    this.handleStudentResponseAssignmentChange = this.handleStudentResponseAssignmentChange.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -543,6 +544,7 @@ class Tool1 extends Component {
       { value: 'Underlining location of errors', label: 'Underlining location of errors' }
     ];
 
+
     if(this.state.studentProficiencyLevel === "Novice (A1 and A2)") {
       directnessOptions = [
         { value: 'Explicit correction', label: 'Explicit correction'},
@@ -562,20 +564,22 @@ class Tool1 extends Component {
     let studentResponseAssignments = [];
 
     if(this.state.studentProficiencyLevel === "Novice (A1 and A2)") {
-      let studentResponseAssignments = [
+      studentResponseAssignments = [
         { value: "Personal log of frequency of errors by type", label: "Personal log of frequency of errors by type" },
         { value: "Revise text based on instructor corrections", label: "Revise text based on instructor corrections"},
         { value: "Personal reflection on errors", label: "Personal reflection on errors"},
         { value: "Other assignment based on errors", label: "Other assignment based on errors"}
       ];
     } else {
-      let studentResponseAssignments = [
+      studentResponseAssignments = [
         { value: "Personal log of frequency of errors by type", label: "Personal log of frequency of errors by type" },
         { value: "Revise text based on self-correction", label: "Revise text based on self-correction"},
         { value: "Personal reflection on errors", label: "Personal reflection on errors"},
         { value: "Other assignment based on errors", label: "Other assignment based on errors"}
       ];
     }
+
+    console.log(studentResponseAssignments);
 
 
 
