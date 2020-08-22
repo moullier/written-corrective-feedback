@@ -45,11 +45,12 @@ class Assignment extends Component {
   componentDidMount () {
     Axios.get("/api/assignment/" + this.state.assignmentId)
     .then(data => {
-
-      console.log("GOT HERE");
+      // update Tool1 status
       if(data.data.Tool1 && data.data.Tool1.completed) {
         console.log("tool 1 finished");
         $("#tool1status").text("Tool Completed");
+        $("#tool1check").removeClass("fa-circle");
+        $("#tool1check").addClass("fa-check-circle");
       } else if(data.data.Tool1) {
         $("#tool1status").text("In Progress");
       } else {
@@ -92,20 +93,27 @@ class Assignment extends Component {
           <h3>{this.state.classTitle}</h3>
           <p>{this.state.assignmentDescription}</p>
           <div className="row">
-            <div className="col-4">
+            <div className="col-4 d-block justify-content-center text-center">
               <button className="btn btn-primary btn-lg" onClick={this.goToTool}>Worksheet 1</button>
-              <br />
-              <span id="tool1status"></span><i className="far fa-check-circle"/>
+              <div className="d-block">
+                <span id="tool1status"></span>
+                <i id="tool1check" className="far fa-circle"/>
+              </div>
             </div>
-            <div className="col-4">
+            <div className="col-4 d-block justify-content-center text-center">
               <button className="btn btn-primary btn-lg">Worksheet 2</button>
-              <br />
-              <span id="tool2status">Not Started</span><i className="far fa-circle"/>
+              <div className="d-block">
+                <span id="tool2status">Not Started</span>
+                <i className="far fa-circle"/>
+              </div>
             </div>
-            <div className="col-4">
+            <div className="col-4 d-block justify-content-center text-center">
               <button className="btn btn-primary btn-lg">Worksheet 3</button>
               <br />
-              <span id="tool3status">Not Started</span><i className="far fa-circle"/>
+              <div className="d-block">
+                <span id="tool3status">Not Started</span>
+                <i className="far fa-circle"/>
+              </div>
             </div>
           </div>
         </div>

@@ -35,6 +35,8 @@ class Tool1 extends Component {
       // step 3 information
       studentProficiencyLevel: undefined,
       directnessLevel: undefined,
+      // step 5 information
+      studentResponseAssignment: undefined,
       // state for dayPicker components
       // step 1 dates:
       assignedDay: undefined,
@@ -109,7 +111,7 @@ class Tool1 extends Component {
 
         // other data retreived
         const {studentProficiencyLevel, directnessLevel, expectationsSet,
-          expectationsHow, completed} = tool1data.data;
+          expectationsHow, studentResponseAssignment, completed} = tool1data.data;
         // const directnessLevel = tool1data.data.directnessLevel;
         console.log(directnessLevel);
         // const expectationsSet = tool1data.data.expectationsSet;
@@ -189,7 +191,9 @@ class Tool1 extends Component {
             studentProficiencyLevel: studentProficiencyLevel,
             directnessLevel: directnessLevel,
             expectationsSet: expectationsSet,
-            expectationsHow: expectationsHow
+            expectationsHow: expectationsHow,
+            studentResponseAssignment: studentResponseAssignment,
+            completed: completed
           })
 
         })
@@ -372,6 +376,7 @@ class Tool1 extends Component {
           break;
         case 5:
           console.log("updating on step 5");
+          $("#nextStepButton").text("Finish and Save");
           updateObject = {
             studentResponseAssignment: this.state.studentResponseAssignment,
             responseDueDate: this.state.responseDueDay,
@@ -379,10 +384,10 @@ class Tool1 extends Component {
           };
           break;
         case 6:
-          console.log("updating button text?");
-          $("#nextStepButton").text("Finish and Save");
+          console.log("updating on step 6");
           updateObject = {
-            peerWCFDate: this.state.peerWCFDay
+            peerWCFDate: this.state.peerWCFDay,
+            completed: true
           };
           break;
         default:
@@ -443,7 +448,15 @@ class Tool1 extends Component {
 
   handleDirectnessChange(e) {
     console.log(e.value);
-    this.setState({directnessLevel: e.value});
+    this.setState({directnessLevel: e.value},
+      () => {
+        if(this.state.directnessLevel === "Underlining location of errors + use of a correction code") {
+          $("#enterCorrectionCodeDiv").show();
+        } else {
+          // possibly clear out any selected correction code here?
+          $("#enterCorrectionCodeDiv").hide();
+        }
+      });
   }
 
   handleStudentProficiencyChange(e) {
@@ -561,6 +574,19 @@ class Tool1 extends Component {
       ]
     }
 
+    let step3ValuesEntered = "";
+
+    if(this.state.studentProficiencyLevel) {
+      step3ValuesEntered = <div>
+        <p><strong>Student Proficiency Level Selected:</strong></p>
+        <p>{this.state.studentProficiencyLevel}</p>
+        <p><strong>Type of Focused Feedback Selected:</strong></p>
+      <p>{this.state.directnessLevel}</p>
+      </div>
+    }
+
+
+
     let studentResponseAssignments = [];
 
     if(this.state.studentProficiencyLevel === "Novice (A1 and A2)") {
@@ -581,7 +607,14 @@ class Tool1 extends Component {
 
     console.log(studentResponseAssignments);
 
-
+    let studentResponseDisplay = "";
+    if(this.state.studentResponseAssignment) {
+      studentResponseDisplay = <div>
+      <p><strong>Selected Student Response:</strong></p>
+      <p>{this.state.studentResponseAssignment}
+      <button className="btn btn-link" onClick={() => {$("#selectStudentResponseDiv").show()}}>(edit)</button></p>
+    </div>
+    };
 
 
     // let languageProficiencyModal = <div className="modal" id="languageProficiencyModal" tabIndex="-1" role="dialog">
@@ -797,7 +830,9 @@ class Tool1 extends Component {
               </tbody>
             </table> */}
             <p>You can use the expected language proficiency of the average learner as a guide to select the type of focused feedback students will receive on this assignment.</p>
-            <p>What is the expected language proficiency of students in this class? For more information you can reference the <a href="https://www.coe.int/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank">Common European Framework</a>.</p>
+            {step3ValuesEntered}
+            <div></div>
+            <p>What is the expected language proficiency of students in this class? For more information you can reference the <a href="https://www.coe.int/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank" rel="noopener noreferrer">Common European Framework</a>.</p>
             <div className="selectDD">
               <Select 
                 options={studentProficiencyLevels}
@@ -812,9 +847,9 @@ class Tool1 extends Component {
                 // defaultValue={{ label: this.state.directnessLevel, value: this.state.directnessLevel }}
               />
             </div>
-            {/* <button className="btn btn-link mb-3" data-toggle="modal" data-target="#languageProficiencyModal">See More Info</button>
-          {languageProficiencyModal} */}
-
+            <div id="enterCorrectionCodeDiv" className="initiallyHidden">
+              ENTER CORRECTION CODE HERE!!
+            </div>
           </div>
           <div className="initiallyHidden" id="step_4">
             <h5>Step 4: Setting Student Expectations</h5>
@@ -907,12 +942,15 @@ class Tool1 extends Component {
                 </tr>
               </tbody>
             </table>
-            <p>Select task:</p>
-            <div className="selectDD">
-              <Select 
-                options={studentResponseAssignments}
-                onChange={this.handleStudentResponseAssignmentChange} // assign onChange function
-              />
+            {studentResponseDisplay}
+            <div id="selectStudentResponseDiv">
+              <p>Select task:</p>
+              <div className="selectDD">
+                <Select 
+                  options={studentResponseAssignments}
+                  onChange={this.handleStudentResponseAssignmentChange} // assign onChange function
+                />
+              </div>
             </div>
             <p>If students will have to turn this response assignment back in to you, what will the due date for this assignment be?
             </p>

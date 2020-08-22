@@ -508,9 +508,11 @@ app.put("/api/tool1/step_6/:id", function (req, res) {
   console.log("req.body:");
   console.log(req.body);
   console.log(req.body.peerWCFDate);
+  console.log(req.body.completed);
   
   db.Tool1.update({
     peerWCFDate: req.body.peerWCFDate,
+    completed: req.body.completed
     }, 
     {
       where: {
