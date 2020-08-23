@@ -18,7 +18,8 @@ class Class extends Component {
       assignmentList: [],
       newAssignmentTitle: "",
       newAssignmentDescription: "",
-      timePeriod: ""
+      timePeriod: "",
+      successfulLoad: false
     }
 
     this.goToAssnPage = this.goToAssnPage.bind(this);
@@ -45,7 +46,8 @@ class Class extends Component {
           classTitle: cName,
           assignmentList: assnList,
           courseId: courseId,
-          timePeriod: time_period
+          timePeriod: time_period,
+          successfulLoad: true
          })
       })
     })
@@ -124,6 +126,18 @@ class Class extends Component {
   }
 
   render() {
+
+    if(!this.state.successfulLoad) {
+      return(
+      <div className="container d-flex justify-content-center">
+        <div className="spinner-border m-5" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+      );
+    }
+
+
 
     let addAssnModal = <div className="modal" id="addAssnModal" tabIndex="-1" role="dialog">
     <div className="modal-dialog" role="document">

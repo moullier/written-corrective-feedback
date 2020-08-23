@@ -38,7 +38,8 @@ class Assignment extends Component {
 
 
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.goToTool = this.goToTool.bind(this);
+    this.goToTool1 = this.goToTool1.bind(this);
+    this.goToTool2 = this.goToTool2.bind(this);
   }
 
 
@@ -67,11 +68,14 @@ class Assignment extends Component {
       }
 
 
-      this.setState({assignmentDescription: data.data.description})
+      this.setState({
+        assignmentDescription: data.data.description,
+        tool1exists: Boolean(data.data.Tool1)
+      })
     })
   }
 
-  goToTool () {
+  goToTool1() {
     this.props.history.push({
       pathname: '/tool1',
       state: { 
@@ -85,23 +89,99 @@ class Assignment extends Component {
     window.location.reload();
   }
 
+  goToTool2() {
+    this.props.history.push({
+      pathname: '/tool2',
+      state: { 
+        uid: this.state.uid,
+        classId: this.state.classId,
+        classTitle: this.state.classTitle,
+        assignmentId: this.state.assignmentId,
+        assignmentTitle: this.state.assignmentTitle
+       }
+     });
+    // window.location.reload();
+  }
+
 
   render() {
+
+    const assignmentFlowchart = this.state.tool1exists ? <div className="d-flex justify-content-center container-fluid mt-5">
+      <table className="table tool1table">
+        <thead className="thead-light">
+          <tr className="d-flex">
+            <th scope="col" className="col-6">Task</th>
+            <th scope="col" className="col-6">Planned Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Assignment Description Distributed to Students</th>
+            <td className="col-6">
+            {/* {assignedDay &&
+            !isDisabled &&
+            `${assignedDay.toLocaleDateString()}`} */}
+            </td>
+          </tr>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Setting Student Expectations of WCF</th>
+            <td className="col-6">
+            {/* {dueDay &&
+            !dueDisabled &&
+            `${dueDay.toLocaleDateString()}`} */}
+            </td>
+          </tr>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Peer WCF Activities (optional)</th>
+            <td className="col-6">
+            {/* {dueDay &&
+            !dueDisabled &&
+            `${dueDay.toLocaleDateString()}`} */}
+            </td>
+          </tr>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Assignment Deadline</th>
+            <td className="col-6">
+            {/* {dueDay &&
+            !dueDisabled &&
+            `${dueDay.toLocaleDateString()}`} */}
+            </td>
+          </tr>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Assignment Returned to Students</th>
+            <td className="col-6">
+            {/* {returnDay &&
+            !returnDisabled &&
+            `${returnDay.toLocaleDateString()}`} */}
+            </td>
+          </tr>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Students Complete Revised Text or Alternative Response to WCF</th>
+            <td className="col-6">
+            {/* {returnDay &&
+            !returnDisabled &&
+            `${returnDay.toLocaleDateString()}`} */}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> : "NO TOOL1 DATA EXISTS";
+
     return (
-        <div className="container">
+        <div className="container text-center">
           <h1>{this.state.assignmentTitle}</h1>
           <h3>{this.state.classTitle}</h3>
           <p>{this.state.assignmentDescription}</p>
           <div className="row">
             <div className="col-4 d-block justify-content-center text-center">
-              <button className="btn btn-primary btn-lg" onClick={this.goToTool}>Worksheet 1</button>
+              <button className="btn btn-primary btn-lg" onClick={this.goToTool1}>Worksheet 1</button>
               <div className="d-block">
                 <span id="tool1status"></span>
                 <i id="tool1check" className="far fa-circle"/>
               </div>
             </div>
             <div className="col-4 d-block justify-content-center text-center">
-              <button className="btn btn-primary btn-lg">Worksheet 2</button>
+              <button className="btn btn-primary btn-lg" onClick={this.goToTool2}>Worksheet 2</button>
               <div className="d-block">
                 <span id="tool2status">Not Started</span>
                 <i className="far fa-circle"/>
@@ -116,6 +196,7 @@ class Assignment extends Component {
               </div>
             </div>
           </div>
+          {assignmentFlowchart}
         </div>
     )
   }
