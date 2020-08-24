@@ -46,6 +46,7 @@ class Assignment extends Component {
   componentDidMount () {
     Axios.get("/api/assignment/" + this.state.assignmentId)
     .then(data => {
+
       // update Tool1 status
       if(data.data.Tool1 && data.data.Tool1.completed) {
         console.log("tool 1 finished");
@@ -67,10 +68,70 @@ class Assignment extends Component {
         $("#tool2status").text("Not Started");
       }
 
+      let assignedDay, dueDay, returnDay, expectationsDay, responseDueDay, responseReturnDay, peerWCFDay;
+      let dueDayObj, assignedDayObj, returnDayObj, expectationsDayObj, responseDueDayObj, responseReturnDayObj, peerWCFDayObj;
+
+      if(Boolean(data.data.Tool1)) {
+        console.log(data.data.Tool1);
+        const tool1 = data.data.Tool1;
+
+        // all dates retrieved
+        assignedDay = tool1.dateAssigned;
+        dueDay = tool1.dueDate;
+        returnDay = tool1.returnDate;
+        expectationsDay = tool1.expectationsDate;
+        responseDueDay = tool1.responseDueDate;
+        responseReturnDay = tool1.responseReturnDate;
+        peerWCFDay = tool1.peerWCFDate;
+
+        // check if date returned from database is null
+        if(assignedDay) {
+          assignedDayObj = new Date(assignedDay);
+          console.log(assignedDayObj);
+        }
+        
+        if(dueDay) {
+          dueDayObj = new Date(dueDay);
+          console.log(dueDayObj);
+        }
+
+        if(returnDay) {
+          returnDayObj = new Date(returnDay);
+          console.log(returnDayObj);
+        }
+
+        if(expectationsDay) {
+          expectationsDayObj = new Date(expectationsDay);
+          console.log(expectationsDayObj);
+        }
+
+        if(responseDueDay) {
+          responseDueDayObj = new Date(responseDueDay);
+          console.log(responseDueDayObj);
+        }
+        
+        if(responseReturnDay) {
+          responseReturnDayObj = new Date(responseReturnDay);
+          console.log(responseReturnDayObj);
+        }
+
+        if(peerWCFDay) {
+          peerWCFDayObj = new Date(peerWCFDay);
+          console.log(peerWCFDayObj);
+        }
+
+      }
 
       this.setState({
         assignmentDescription: data.data.description,
-        tool1exists: Boolean(data.data.Tool1)
+        tool1exists: Boolean(data.data.Tool1),
+        assignedDay: assignedDayObj,
+        dueDay: dueDayObj,
+        returnDay: returnDayObj,
+        expectationsDay: expectationsDayObj,
+        responseDueDay: responseDueDayObj,
+        responseReturnDay: responseReturnDayObj,
+        peerWCFDay: peerWCFDayObj
       })
     })
   }
@@ -118,49 +179,50 @@ class Assignment extends Component {
           <tr className="d-flex">
             <th scope="row" className="col-6">Assignment Description Distributed to Students</th>
             <td className="col-6">
-            {/* {assignedDay &&
-            !isDisabled &&
-            `${assignedDay.toLocaleDateString()}`} */}
+              {this.state.assignedDay &&
+              `${this.state.assignedDay.toLocaleDateString()}`}
             </td>
           </tr>
           <tr className="d-flex">
             <th scope="row" className="col-6">Setting Student Expectations of WCF</th>
             <td className="col-6">
-            {/* {dueDay &&
-            !dueDisabled &&
-            `${dueDay.toLocaleDateString()}`} */}
+              {this.state.expectationsDay &&
+              `${this.state.expectationsDay.toLocaleDateString()}`}
             </td>
           </tr>
           <tr className="d-flex">
             <th scope="row" className="col-6">Peer WCF Activities (optional)</th>
             <td className="col-6">
-            {/* {dueDay &&
-            !dueDisabled &&
-            `${dueDay.toLocaleDateString()}`} */}
+              {this.state.peerWCFDay &&
+              `${this.state.peerWCFDay.toLocaleDateString()}`}
             </td>
           </tr>
           <tr className="d-flex">
             <th scope="row" className="col-6">Assignment Deadline</th>
             <td className="col-6">
-            {/* {dueDay &&
-            !dueDisabled &&
-            `${dueDay.toLocaleDateString()}`} */}
+            {this.state.dueDay &&
+            `${this.state.dueDay.toLocaleDateString()}`}
             </td>
           </tr>
           <tr className="d-flex">
             <th scope="row" className="col-6">Assignment Returned to Students</th>
             <td className="col-6">
-            {/* {returnDay &&
-            !returnDisabled &&
-            `${returnDay.toLocaleDateString()}`} */}
+              {this.state.returnDay &&
+              `${this.state.returnDay.toLocaleDateString()}`}
             </td>
           </tr>
           <tr className="d-flex">
             <th scope="row" className="col-6">Students Complete Revised Text or Alternative Response to WCF</th>
             <td className="col-6">
-            {/* {returnDay &&
-            !returnDisabled &&
-            `${returnDay.toLocaleDateString()}`} */}
+              {this.state.responseDueDay &&
+              `${this.state.responseDueDay.toLocaleDateString()}`}
+            </td>
+          </tr>
+          <tr className="d-flex">
+            <th scope="row" className="col-6">Return Revised Text or Alternative Assignment</th>
+            <td className="col-6">
+              {this.state.responseReturnDay &&
+              `${this.state.responseReturnDay.toLocaleDateString()}`}
             </td>
           </tr>
         </tbody>
