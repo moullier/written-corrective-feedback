@@ -312,7 +312,13 @@ class Tool1 extends Component {
     console.log("activeStep: " + this.state.activeStep);
     console.log("assignmentId: " + this.state.assignmentId);
 
-    if(!this.state.toolExistsInDB && this.state.activeStep > 0) {
+    if(this.state.activeStep === 2 && (this.state.selectedCorrectionTypes.length < 3 || this.state.selectedCorrectionTypes.length > 6)) {
+      if(this.state.selectedCorrectionTypes.length < 3) {
+        $("#selectMoreError").show();
+      } else {
+        console.log("too many choices");
+      }
+    } else if(!this.state.toolExistsInDB && this.state.activeStep > 0) {
       // create new database entry
       console.log("making new db entry");
       Axios.post("/api/new_tool1/" + this.state.assignmentId, {
@@ -494,6 +500,9 @@ class Tool1 extends Component {
 
     // calculate className for column widths based on number of correction types selected
     console.log("number of correction types selected:" + this.state.selectedCorrectionTypes.length);
+    if(this.state.selectedCorrectionTypes.length > 2) {
+      $("#selectMoreError").hide();
+    }
 
     let secondCorrectionsRow = (this.state.selectedCorrectionTypes.length > 3 ) ? 
     <tr className="d-flex" id="correctionsRow">
@@ -763,6 +772,7 @@ class Tool1 extends Component {
               selectedChoices={this.state.selectedCorrectionTypes}
               choiceName={"Correction Types"}
               onChange={this.changeHandler}
+              max={6}
             />
             <div className="d-flex justify-content-center container-fluid mt-5">
               <table className="table selectedCorrectionsTable">
@@ -789,6 +799,7 @@ class Tool1 extends Component {
                 </tbody>
               </table>
             </div>
+            <div id="selectMoreError" className="initiallyHidden text-center alert alert-danger" role="alert">Error: Select At Least 3 Correction Types</div>
           </div>
           <div className="initiallyHidden" id="step_3">
             <h5>Step 3: Determining the Directness of Feedback</h5>
