@@ -39,18 +39,6 @@ constructor(props) {
 
   toggleList() {
 
-    // for(let i = 0; i < this.props.initialChoices.length; i++) {
-    //   console.log("initialChoices index = " + i);
-    //   console.log("element:");
-    //   console.log(this.props.initialChoices[i]);
-    // }
-
-    // for(let i = 0; i < this.props.selectedChoices.length; i++) {
-    //   console.log("selectedChoices index = " + i);
-    //   console.log("element:");
-    //   console.log(this.props.selectedChoices[i]);
-    // }
-
     console.log("**************");
     console.log("Hopefully running this only one time, with an array of choices");
 
@@ -94,6 +82,7 @@ constructor(props) {
     console.log(e.target.value);
   
     if($("#" + e.target.id).hasClass("border border-primary")) {
+      // if clicked choice is selected, deselect it
       $("#" + e.target.id).removeClass("border border-primary");
       let newChoices = this.state.selectedChoices;
       const index = newChoices.indexOf(e.currentTarget.getAttribute('value'));
@@ -106,16 +95,23 @@ constructor(props) {
         }
       });
     } else {
-      $("#" + e.target.id).addClass("border border-primary");
-      let newChoices = this.state.selectedChoices;
-      console.log(e.target);
-      console.log(e.currentTarget.getAttribute('value') );
-      newChoices.push(e.currentTarget.getAttribute('value'));
-      this.setState({selectedChoices: newChoices}, () => {
+      // if clicked choice is not selected, check against max length prop
+      if(this.state.selectedChoices.length <= this.props.max - 1) {
+        $("#" + e.target.id).addClass("border border-primary");
+        let newChoices = this.state.selectedChoices;
+        console.log(e.target);
+        console.log(e.currentTarget.getAttribute('value') );
+        newChoices.push(e.currentTarget.getAttribute('value'));
+        this.setState({selectedChoices: newChoices}, () => {
+          if (typeof this.props.onChange === 'function') {
+            this.props.onChange(this.state.selectedChoices);
+          }
+        });
+      } else {
         if (typeof this.props.onChange === 'function') {
-          this.props.onChange(this.state.selectedChoices);
+          this.props.onChange("max choices exceeded");
         }
-      });
+      }
     }
   }
   

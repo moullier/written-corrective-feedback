@@ -485,7 +485,14 @@ class Tool1 extends Component {
 
   // handles callback from Choices child component
   changeHandler = (childData) => {
-    this.setState({selectedCorrectionTypes: childData})
+    console.log(childData);
+    console.log(typeof(childData));
+    if(childData == "max choices exceeded") {
+      $("#maxSelected").show();
+    } else {
+      $("#maxSelected").hide();
+      this.setState({selectedCorrectionTypes: childData});
+    }
   }
 
 
@@ -800,6 +807,7 @@ class Tool1 extends Component {
               </table>
             </div>
             <div id="selectMoreError" className="initiallyHidden text-center alert alert-danger" role="alert">Error: Select At Least 3 Correction Types</div>
+            <div id="maxSelected" className="initiallyHidden text-center alert alert-danger" role="alert">Error: Maximum Number of Types Selected</div>
           </div>
           <div className="initiallyHidden" id="step_3">
             <h5>Step 3: Determining the Directness of Feedback</h5>
