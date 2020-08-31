@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 // import "../../App.css";
 import Axios from "axios";
 import $ from "jquery";
@@ -23,7 +24,9 @@ class Assignment extends Component {
         classTitle: this.props.location.state.classTitle,
         assignmentId: this.props.location.state.assignmentId,
         assignmentTitle: this.props.location.state.assignmentTitle,
-        assignmentDescription: ""
+        assignmentDescription: "",
+        selectedCorrectionTypes: [],
+        successfulLoad: false
       }
     } else {
       this.state = {
@@ -32,14 +35,18 @@ class Assignment extends Component {
         classTitle: null,
         assignmentId: null,
         assignmentTitle: null,
-        assignmentDescription: ""        
+        assignmentDescription: "",
+        selectedCorrectionTypes: [],
+        successfulLoad: false
       }
     }
 
 
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.goToTool1 = this.goToTool1.bind(this);
     this.goToTool2 = this.goToTool2.bind(this);
+    this.updateToolStatus = this.updateToolStatus.bind(this);
   }
 
 
@@ -47,33 +54,17 @@ class Assignment extends Component {
     Axios.get("/api/assignment/" + this.state.assignmentId)
     .then(data => {
 
-      // update Tool1 status
-      if(data.data.Tool1 && data.data.Tool1.completed) {
-        console.log("tool 1 finished");
-        $("#tool1status").text("Tool Completed");
-        $("#tool1check").removeClass("fa-circle");
-        $("#tool1check").addClass("fa-check-circle");
-      } else if(data.data.Tool1) {
-        $("#tool1status").text("In Progress");
-      } else {
-        console.log("tool 1 not created yet");
-        $("#tool1status").text("Not Started");
-      }
-
-      if(data.data.Tool2) {
-        console.log(data.data);
-        $("#tool1status").text("In Progress");
-      } else {
-        console.log("tool 2 not created yet");
-        $("#tool2status").text("Not Started");
-      }
-
       let assignedDay, dueDay, returnDay, expectationsDay, responseDueDay, responseReturnDay, peerWCFDay;
       let dueDayObj, assignedDayObj, returnDayObj, expectationsDayObj, responseDueDayObj, responseReturnDayObj, peerWCFDayObj;
+      let tool1status = 0;
 
       if(Boolean(data.data.Tool1)) {
         console.log(data.data.Tool1);
         const tool1 = data.data.Tool1;
+        const tool1ID = tool1.id;
+        console.log("tool1ID = " + tool1ID);
+
+        tool1status = (tool1.completed === true) ? 2 : 1;
 
         // all dates retrieved
         assignedDay = tool1.dateAssigned;
@@ -119,21 +110,37 @@ class Assignment extends Component {
           peerWCFDayObj = new Date(peerWCFDay);
           console.log(peerWCFDayObj);
         }
+        Axios.get("/api/correction_types/" + tool1ID)
+        .then((ct_res) => {
+          console.log(ct_res.data);
+          
+          // format correction types as an array of strings
+          const correction_types = ct_res.data.map(el => el.category);
+          console.log(correction_types);
+
+          this.setState({
+            assignmentDescription: data.data.description,
+            tool1exists: Boolean(data.data.Tool1),
+            assignedDay: assignedDayObj,
+            dueDay: dueDayObj,
+            returnDay: returnDayObj,
+            expectationsDay: expectationsDayObj,
+            responseDueDay: responseDueDayObj,
+            responseReturnDay: responseReturnDayObj,
+            peerWCFDay: peerWCFDayObj,
+            selectedCorrectionTypes: correction_types,
+            successfulLoad: true,
+            tool1status: tool1status
+          })
+        });
+
 
       }
-
-      this.setState({
-        assignmentDescription: data.data.description,
-        tool1exists: Boolean(data.data.Tool1),
-        assignedDay: assignedDayObj,
-        dueDay: dueDayObj,
-        returnDay: returnDayObj,
-        expectationsDay: expectationsDayObj,
-        responseDueDay: responseDueDayObj,
-        responseReturnDay: responseReturnDayObj,
-        peerWCFDay: peerWCFDayObj
-      })
     })
+  }
+
+  componentDidUpdate() {
+    this.updateToolStatus();
   }
 
   goToTool1() {
@@ -164,70 +171,124 @@ class Assignment extends Component {
     // window.location.reload();
   }
 
+  updateToolStatus() {
+          // update Tool1 status
+          if(this.state.tool1status === 2) {
+            console.log("tool 1 finished");
+            $("#tool1status").text("Tool Completed");
+            $("#tool1check").removeClass("fa-circle");
+            $("#tool1check").addClass("fa-check-circle");
+          } else if(this.state.tool1status === 1) {
+            $("#tool1status").text("In Progress");
+          } else {
+            console.log("tool 1 not created yet");
+            $("#tool1status").text("Not Started");
+          }
+    
+          // if(data.data.Tool2) {
+          //   console.log(data.data);
+          //   $("#tool2status").text("In Progress");
+          // } else {
+          //   console.log("tool 2 not created yet");
+          //   $("#tool2status").text("Not Started");
+          // }
+  }
+
 
   render() {
 
-    const assignmentFlowchart = this.state.tool1exists ? <div className="d-flex justify-content-center container-fluid mt-5">
-      <table className="table tool1table">
-        <thead className="thead-light">
-          <tr className="d-flex">
-            <th scope="col" className="col-6">Task</th>
-            <th scope="col" className="col-6">Planned Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Assignment Description Distributed to Students</th>
-            <td className="col-6">
-              {this.state.assignedDay &&
-              `${this.state.assignedDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Setting Student Expectations of WCF</th>
-            <td className="col-6">
-              {this.state.expectationsDay &&
-              `${this.state.expectationsDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Peer WCF Activities (optional)</th>
-            <td className="col-6">
-              {this.state.peerWCFDay &&
-              `${this.state.peerWCFDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Assignment Deadline</th>
-            <td className="col-6">
-            {this.state.dueDay &&
-            `${this.state.dueDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Assignment Returned to Students</th>
-            <td className="col-6">
-              {this.state.returnDay &&
-              `${this.state.returnDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Students Complete Revised Text or Alternative Response to WCF</th>
-            <td className="col-6">
-              {this.state.responseDueDay &&
-              `${this.state.responseDueDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-          <tr className="d-flex">
-            <th scope="row" className="col-6">Return Revised Text or Alternative Assignment</th>
-            <td className="col-6">
-              {this.state.responseReturnDay &&
-              `${this.state.responseReturnDay.toLocaleDateString()}`}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div> : "NO TOOL1 DATA EXISTS";
+    if(!this.state.successfulLoad) {
+      return(
+      <div className="container d-flex justify-content-center">
+        <div className="spinner-border m-5" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+      );
+    }
+
+    // render div to display correction types based on the number that have been selected (3-6)
+    let correctionTypesDiv = "";
+    let columnWidth = (this.state.selectedCorrectionTypes.length > 0) ? Math.floor(12 / this.state.selectedCorrectionTypes.length) : 0;
+
+    
+    columnWidth = "selectedTypeCol border col-" + columnWidth;
+
+    if(this.state.tool1exists && this.state.selectedCorrectionTypes.length > 0) {
+      correctionTypesDiv = <div className="mt-5">
+        <p><strong>Selected Correction Types:</strong></p>
+        <div className="row justify-content-center">
+        {this.state.selectedCorrectionTypes.map((el, index) => (
+          <div key={index} className={columnWidth}>{el}</div>
+        ))}
+      </div>
+      </div>
+    }
+
+    const assignmentFlowchart = this.state.tool1exists ? <div className="mt-5">
+      <p><strong>Assignment Flowchart:</strong></p>
+        <div className="d-flex justify-content-center container-fluid">
+        <table className="table tool1table">
+          <thead className="thead-light">
+            <tr className="d-flex">
+              <th scope="col" className="col-6">Task</th>
+              <th scope="col" className="col-6">Planned Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Assignment Description Distributed to Students</th>
+              <td className="col-6">
+                {this.state.assignedDay &&
+                `${this.state.assignedDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Setting Student Expectations of WCF</th>
+              <td className="col-6">
+                {this.state.expectationsDay &&
+                `${this.state.expectationsDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Peer WCF Activities (optional)</th>
+              <td className="col-6">
+                {this.state.peerWCFDay &&
+                `${this.state.peerWCFDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Assignment Deadline</th>
+              <td className="col-6">
+              {this.state.dueDay &&
+              `${this.state.dueDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Assignment Returned to Students</th>
+              <td className="col-6">
+                {this.state.returnDay &&
+                `${this.state.returnDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Students Complete Revised Text or Alternative Response to WCF</th>
+              <td className="col-6">
+                {this.state.responseDueDay &&
+                `${this.state.responseDueDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+            <tr className="d-flex">
+              <th scope="row" className="col-6">Return Revised Text or Alternative Assignment</th>
+              <td className="col-6">
+                {this.state.responseReturnDay &&
+                `${this.state.responseReturnDay.toLocaleDateString()}`}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> : "";
 
     return (
         <div className="container text-center">
@@ -258,7 +319,15 @@ class Assignment extends Component {
               </div>
             </div>
           </div>
+          {correctionTypesDiv}
           {assignmentFlowchart}
+          <Link className="mt-3" to={{
+              pathname: '/class',
+              state: {
+                uid: this.state.uid,
+                classId: this.state.classId
+              }
+          }}>Back to Class Homepage</Link>
         </div>
     )
   }

@@ -41,7 +41,11 @@ h6 {
   background-color: #D9E2EC;
 }
 
+.selectedTypeCol {
+  padding: 10px;
+}
 
+/* Recolor primary button */
 .btn-primary { 
   color: #ffffff !important; 
   background-color: #199473 !important; 
