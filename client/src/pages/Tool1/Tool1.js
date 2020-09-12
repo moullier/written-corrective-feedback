@@ -806,8 +806,8 @@ class Tool1 extends Component {
                 </tbody>
               </table>
             </div>
-            <div id="selectMoreError" className="initiallyHidden text-center alert alert-danger" role="alert">Error: Select At Least 3 Correction Types</div>
-            <div id="maxSelected" className="initiallyHidden text-center alert alert-danger" role="alert">Error: Maximum Number of Types Selected</div>
+            <div id="selectMoreError" className="initiallyHidden text-center alert alert-danger" role="alert">Alert: Select At Least Three Error Types</div>
+            <div id="maxSelected" className="initiallyHidden text-center alert alert-danger" role="alert">Alert: Research Suggests Limiting Feedback to Six Error Types</div>
           </div>
           <div className="initiallyHidden" id="step_3">
             <h5>Step 3: Determining the Directness of Feedback</h5>

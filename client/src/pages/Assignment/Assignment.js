@@ -135,6 +135,14 @@ class Assignment extends Component {
         });
 
 
+      } else {
+        // loaded assignment but no tool1 exists
+        this.setState({
+          assignmentDescription: data.data.description,
+          tool1exists: Boolean(data.data.Tool1),
+          successfulLoad: true,
+          tool1status: 0
+        })
       }
     })
   }

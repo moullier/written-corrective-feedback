@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Class from "./pages/Class/Class";
 import Assignment from "./pages/Assignment/Assignment";
 import Tool1 from "./pages/Tool1/Tool1";
+import Tool2 from "./pages/Tool2/Tool2";
 
 class App extends Component {
   render() {
@@ -22,6 +23,7 @@ class App extends Component {
           <Route exact path={"/class"} component={Class} />
           <Route exact path={"/assignment"} component={Assignment} />
           <Route exact path={"/tool1"} component={Tool1} />
+          <Route exact path={"/tool2"} component={Tool2} />
           <Route exact path={'/'} component={Home} />
         </Switch>
       </BrowserRouter>
