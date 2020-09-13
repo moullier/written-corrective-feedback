@@ -27,14 +27,32 @@ class Tool2 extends Component {
       classTitle: this.props.location.state.classTitle,
       assignmentId: this.props.location.state.assignmentId,
       assignmentTitle: this.props.location.state.assignmentTitle,
-      tool2Exists: false
+      tool2Exists: false,
+      activeStep: 0
     }
 
+    this.showNextStep = this.showNextStep.bind(this);
   }
 
   componentDidMount() {
     console.log("Tool2 did mount");
-  
+  }
+
+  showNextStep(e) {
+
+    let currentStepString = "step_" + this.state.activeStep;
+    let nextStep = parseInt(this.state.activeStep) + 1;
+    let nextStepString = "#step_" + nextStep;
+
+    currentStepString = "#" + currentStepString;
+    if(this.state.activeStep === 1) {
+      $("#step_0").hide();
+    }
+    $(currentStepString).hide();
+    $(nextStepString).show();
+
+    this.setState({activeStep: this.state.activeStep + 1});
+
   }
 
   render() {
@@ -43,7 +61,15 @@ class Tool2 extends Component {
           <h1>WCF Grading Checklist Tool – Stay Focused While Grading!</h1>
           <h2 className="mb-5">{this.state.assignmentTitle}</h2>
           <Tool2Step0 />
+          <div id="step_1" className="initiallyHidden">
+            Step 1
+          </div>
+          <div id="step_2" className="initiallyHidden">
+            Step 2
+          </div>
+          <button className="btn btn-primary mr-3 mt-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
         </div>
+
     )
   }
 }
