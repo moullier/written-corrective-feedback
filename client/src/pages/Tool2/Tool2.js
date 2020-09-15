@@ -62,7 +62,11 @@ class Tool2 extends Component {
           <h2 className="mb-5">{this.state.assignmentTitle}</h2>
           <Tool2Step0 />
           <div id="step_1" className="initiallyHidden">
-            Step 1
+            <h5>Summarize Your WCF Strategy</h5>
+            <h3>(Error Categories, Methods, Content)</h3>
+            <p>Focused Feedback Error Categories:</p>
+            <div className="mb-3">
+            </div>
           </div>
           <div id="step_2" className="initiallyHidden">
             Step 2
