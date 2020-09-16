@@ -112,11 +112,8 @@ class Tool1 extends Component {
         // other data retreived
         const {studentProficiencyLevel, directnessLevel, expectationsSet,
           expectationsHow, studentResponseAssignment, completed} = tool1data.data;
-        // const directnessLevel = tool1data.data.directnessLevel;
+
         console.log(directnessLevel);
-        // const expectationsSet = tool1data.data.expectationsSet;
-        // const expectationsHow = tool1data.data.expectationsHow;
-        // const completed = tool1data.data.completed;
 
         // const {id,title} = post.data
 

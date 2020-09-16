@@ -28,14 +28,52 @@ class Tool2 extends Component {
       assignmentId: this.props.location.state.assignmentId,
       assignmentTitle: this.props.location.state.assignmentTitle,
       tool2Exists: false,
-      activeStep: 0
+      activeStep: 0,
+      tool1ID: undefined,
+      directnessLevel: "",
+      correction_types: [],
+      studentProficiencyLevel: ""
     }
 
     this.showNextStep = this.showNextStep.bind(this);
   }
 
   componentDidMount() {
-    console.log("Tool2 did mount");
+    // attempt to fetch a tool1 from database, if one exists
+    Axios.get("/api/tool1/" + this.state.assignmentId)
+    .then((tool1data) => {
+      console.log("tool1data.data is: ");
+      console.log(tool1data.data);
+      
+      // if there is a tool1 in the database
+      if(tool1data.data !== null) {
+
+        const {studentProficiencyLevel, directnessLevel} = tool1data.data;
+        const tool1ID = tool1data.data.id;
+
+        Axios.get("/api/correction_types/" + tool1ID)
+        .then((ct_res) => {
+          console.log(ct_res.data);
+
+          // format correction types as an array of strings
+          const correction_types = ct_res.data.map(el => el.category);
+          console.log(correction_types);
+          
+          this.setState({
+            tool1ID: tool1ID,
+            directnessLevel: directnessLevel,
+            correction_types: correction_types,
+            studentProficiencyLevel: studentProficiencyLevel
+          })
+
+        });
+
+
+      } else {
+        // the tool1 has not been started -- not sure what workflow we want here
+
+      }
+    });
   }
 
   showNextStep(e) {
@@ -62,16 +100,37 @@ class Tool2 extends Component {
           <h2 className="mb-5">{this.state.assignmentTitle}</h2>
           <Tool2Step0 />
           <div id="step_1" className="initiallyHidden">
-            <h5>Summarize Your WCF Strategy</h5>
-            <h3>(Error Categories, Methods, Content)</h3>
-            <p>Focused Feedback Error Categories:</p>
+            <h5>Step 1: Summarize Your WCF Strategy</h5>
+            <h5>(Error Categories, Methods, Content)</h5>
+            <p>Below are the the error categories you will be targeting for this assignment, from your work on the Assignment Blueprint (Tool 1)</p>
+            <p><strong>1 - Focused Feedback Error Categories:</strong></p>
             <div className="mb-3">
+              <ul>
+                {this.state.correction_types.map(el => (<li>{el}</li>))}
+              </ul>
             </div>
+            <p><strong>2 - Method for Targeting Error Categories</strong></p>
+            <p>{this.state.directnessLevel}</p>
+            <p><strong>3 - Feedback on Content</strong></p>
+            <p>To be truly effective, WCF on error categories needs to be combined with feedback on, or a response to, the literal content of a student’s writing assignment. Make sure you’re responding to the content of each and every assignment as you work your way through the pile. Now that you’ve summarized your WCF strategy, you’re ready to grade. Go on to the next step which includes a brief checklist of things to think about as you’re grading assignments.</p>
           </div>
           <div id="step_2" className="initiallyHidden">
-            Step 2
+            <h5>Step 2 - Things to Consider as You’re Grading</h5>
+            <p>Each step of your WCF strategy presents a few specific challenges. While grading, use this tool to make sure you stick to the strategy you worked hard to develop.</p>
           </div>
           <button className="btn btn-primary mr-3 mt-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
+          <br />
+          <Link to={{
+            pathname: "/assignment",
+            state: { 
+              uid: this.props.location.state.uid,
+              classId: this.props.location.state.classId,
+              classTitle: this.props.location.state.classTitle,
+              assignmentId: this.props.location.state.assignmentId,
+              assignmentTitle: this.props.location.state.assignmentTitle
+            }
+          }}
+          >Return to Assignment Hub</Link>
         </div>
 
     )
