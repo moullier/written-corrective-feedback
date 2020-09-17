@@ -117,6 +117,12 @@ class Tool2 extends Component {
           <div id="step_2" className="initiallyHidden">
             <h5>Step 2 - Things to Consider as You’re Grading</h5>
             <p>Each step of your WCF strategy presents a few specific challenges. While grading, use this tool to make sure you stick to the strategy you worked hard to develop.</p>
+            <p>1 – Sticking to your WCF strategy</p>
+            <p>Each step of your WCF strategy presents a few specific challenges. While grading, use this tool to make sure you stick to the strategy you worked hard to develop. As you grade, make sure the responses to all the following statements are “true”:</p>
+            <p>I am searching for errors in the error categories I set before I started grading this assignment</p>
+            <p>Regardless of how important (word choice) or trivial (punctuation) an error is, if it is not one of my error categories, I am not annotating it. (Though I can note trends in my personal notes.)</p>
+            <p>I am annotating according to the direct or indirect feedback method I determined and only that method.</p>
+            <p>I am responding to student content in the margins or at the end of each assignment.</p>
           </div>
           <button className="btn btn-primary mr-3 mt-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
           <br />
