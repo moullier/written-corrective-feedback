@@ -117,12 +117,32 @@ class Tool2 extends Component {
           <div id="step_2" className="initiallyHidden">
             <h5>Step 2 - Things to Consider as You’re Grading</h5>
             <p>Each step of your WCF strategy presents a few specific challenges. While grading, use this tool to make sure you stick to the strategy you worked hard to develop.</p>
-            <p>1 – Sticking to your WCF strategy</p>
+            <p><strong>1 – Sticking to Your WCF Strategy</strong></p>
             <p>Each step of your WCF strategy presents a few specific challenges. While grading, use this tool to make sure you stick to the strategy you worked hard to develop. As you grade, make sure the responses to all the following statements are “true”:</p>
-            <p>I am searching for errors in the error categories I set before I started grading this assignment</p>
-            <p>Regardless of how important (word choice) or trivial (punctuation) an error is, if it is not one of my error categories, I am not annotating it. (Though I can note trends in my personal notes.)</p>
-            <p>I am annotating according to the direct or indirect feedback method I determined and only that method.</p>
-            <p>I am responding to student content in the margins or at the end of each assignment.</p>
+            <ul>
+              <li>I am searching for errors in the error categories I set before I started grading this assignment</li>
+              <li>Regardless of how important (word choice) or trivial (punctuation) an error is, if it is not one of my error categories, I am not annotating it. (Though I can note trends in my personal notes.)</li>
+              <li>I am annotating according to the direct or indirect feedback method I determined and only that method.</li>
+              <li>I am responding to student content in the margins or at the end of each assignment.</li>
+            </ul>
+            <p><strong>2 – Taking Notes and Calibrating Your WCF Strategy</strong></p>
+            <p>When you first start using this approach, it may take a while to set “optimal” error categories for each assignment. The purpose of this sub-step is to give you a space to take notes on the relative frequency of the error categories you selected for feedback. This will help you determine if you need to change error categories for next year and if there are several recurring errors that aren’t in your categories that you need to address in other ways (since you’re not allowed to annotate them for this assignment.)</p>
+            <p>As you’re grading, complete the table below by writing in the errors you set and estimating the frequency of each error type across students for this assignment. For example, after grading a third of your class, you may feel “adjective agreement” errors (one of your error categories) are common for many students. Fill in the table to reflect this and feel free to update the frequency of these errors as often as necessary. In the table below, use “C” for common errors, “UC” for uncommon errors, and “R” for those that are quite rare</p>
+            <p>Finally, use the table below to track important errors you’re seeing that aren’t in your error categories. These are going to be especially important as we begin to plan grammar activities that will supplement your WCF and help students grow in areas that were not targeted by feedback on their assignment.</p>
+            <div className="container">
+              <div className="row text-center">
+                <div className="col-4">
+                  Common
+                </div>
+                <div className="col-4">
+                  Uncommon
+                </div>
+                <div className="col-4">
+                  Rare
+                </div>
+              </div>
+
+            </div>
           </div>
           <button className="btn btn-primary mr-3 mt-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>
           <br />
