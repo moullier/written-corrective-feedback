@@ -25,6 +25,13 @@ module.exports = function(sequelize, DataTypes) {
         });
       };
 
+    Assignment.associate = function(models) {
+      // Associating Assigment with Tool2
+      Assignment.hasOne(models.Tool2, {
+        onDelete: "cascade"
+      });
+    };
+
 
     return Assignment;
   };

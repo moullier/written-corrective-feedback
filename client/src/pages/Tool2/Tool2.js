@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../App.css";
 import Axios from "axios";
 import $ from "jquery";
+import Dropdown from 'react-bootstrap/Dropdown';
 // import Popper from 'popper.js';
 // import 'bootstrap/js/dist/dropdown';
 // import DayPickerInput from 'react-day-picker/DayPickerInput';
@@ -32,10 +33,12 @@ class Tool2 extends Component {
       tool1ID: undefined,
       directnessLevel: "",
       correction_types: [],
-      studentProficiencyLevel: ""
+      studentProficiencyLevel: "",
+      errorFrequencies: []
     }
 
     this.showNextStep = this.showNextStep.bind(this);
+    this.selectFrequency = this.selectFrequency.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +96,19 @@ class Tool2 extends Component {
 
   }
 
+  // set the frequency of which errors are occuring
+  selectFrequency(e) {
+    e.preventDefault();
+    console.log(e.target.id);
+    const index = e.target.id.charAt(0);
+    const freq = e.target.id.substring(1);
+    console.log(index);
+    console.log(freq);
+    let tempArray = this.state.errorFrequencies;
+    tempArray[index] = freq;
+    this.setState({errorFrequencies: tempArray});
+  }
+
   render() {
     return (
         <div className="container">
@@ -127,7 +143,36 @@ class Tool2 extends Component {
             </ul>
             <p><strong>2 – Taking Notes and Calibrating Your WCF Strategy</strong></p>
             <p>When you first start using this approach, it may take a while to set “optimal” error categories for each assignment. The purpose of this sub-step is to give you a space to take notes on the relative frequency of the error categories you selected for feedback. This will help you determine if you need to change error categories for next year and if there are several recurring errors that aren’t in your categories that you need to address in other ways (since you’re not allowed to annotate them for this assignment.)</p>
-            <p>As you’re grading, complete the table below by writing in the errors you set and estimating the frequency of each error type across students for this assignment. For example, after grading a third of your class, you may feel “adjective agreement” errors (one of your error categories) are common for many students. Fill in the table to reflect this and feel free to update the frequency of these errors as often as necessary. In the table below, use “C” for common errors, “UC” for uncommon errors, and “R” for those that are quite rare</p>
+            <p>As you’re grading, complete the table below by writing in the errors you set and estimating the frequency of each error type across students for this assignment. For example, after grading a third of your class, you may feel “adjective agreement” errors (one of your error categories) are common for many students. Fill in the table to reflect this and feel free to update the frequency of these errors as often as necessary. In the table below, select whether the error is common, uncommon, or rare:</p>
+            <div className="container justify-content-center">
+              <div className="row text-center">
+                <div className="col-6">
+                  <strong>Error Category</strong>
+                </div>
+                <div className="col-6">
+                  <strong>Frequency of Error</strong>
+                </div>
+              </div>
+                {this.state.correction_types.map((el, index) => (
+                  <div className="row mb-3" key={index}>
+                    <div className="col-6">
+                      {el}
+                    </div>
+                    <div className="col-6">
+                      <Dropdown>
+                        <Dropdown.Toggle variant="primary" id="dropdownRarity">
+                          {this.state.errorFrequencies[index] || "Select Frequency"}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item id={index + "Common"} onClick={this.selectFrequency}>Common</Dropdown.Item>
+                          <Dropdown.Item id={index + "Uncommon"} onClick={this.selectFrequency}>Uncommon</Dropdown.Item>
+                          <Dropdown.Item id={index + "Rare"} onClick={this.selectFrequency}>Rare</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
+                  </div>
+                ))}
+            </div>
             <p>Finally, use the table below to track important errors you’re seeing that aren’t in your error categories. These are going to be especially important as we begin to plan grammar activities that will supplement your WCF and help students grow in areas that were not targeted by feedback on their assignment.</p>
             <div className="container">
               <div className="row text-center">

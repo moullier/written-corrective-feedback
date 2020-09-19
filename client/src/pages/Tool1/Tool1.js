@@ -309,6 +309,7 @@ class Tool1 extends Component {
     console.log("activeStep: " + this.state.activeStep);
     console.log("assignmentId: " + this.state.assignmentId);
 
+    // checking to see if 3-6 error categories were selected in step 2
     if(this.state.activeStep === 2 && (this.state.selectedCorrectionTypes.length < 3 || this.state.selectedCorrectionTypes.length > 6)) {
       if(this.state.selectedCorrectionTypes.length < 3) {
         $("#selectMoreError").show();
