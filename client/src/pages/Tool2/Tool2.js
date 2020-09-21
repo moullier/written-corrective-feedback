@@ -92,6 +92,15 @@ class Tool2 extends Component {
     $(currentStepString).hide();
     $(nextStepString).show();
 
+    if(!this.state.tool2ID && this.state.activeStep > 0) {
+      console.log("creating new db entry");
+      Axios.post("/api/new_tool2/" + this.state.assignmentId, {})
+      .then(res => {
+        console.log(res);
+      });
+
+    }
+
     this.setState({activeStep: this.state.activeStep + 1});
 
   }

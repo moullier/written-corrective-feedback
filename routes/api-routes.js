@@ -313,6 +313,19 @@ module.exports = function (app) {
     })
   })
 
+  // create new tool 2, given assignment ID
+  app.post("/api/new_tool2/:assn_id", function (req, res) {
+    console.log(req.params.assn_id);
+    
+    db.Tool2.create({
+      AssignmentId: req.params.assn_id
+    })
+    .then(function (data) {
+      console.log(data);
+      res.json(data);
+    })
+  })
+
 
   // PUT ROUTES
 

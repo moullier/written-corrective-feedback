@@ -23,14 +23,11 @@ module.exports = function(sequelize, DataTypes) {
         Assignment.hasOne(models.Tool1, {
           onDelete: "cascade"
         });
-      };
 
-    Assignment.associate = function(models) {
-      // Associating Assigment with Tool2
-      Assignment.hasOne(models.Tool2, {
-        onDelete: "cascade"
-      });
-    };
+        Assignment.hasOne(models.Tool2, {
+          onDelete: "cascade"
+        });
+      };
 
 
     return Assignment;
