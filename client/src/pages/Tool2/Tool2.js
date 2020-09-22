@@ -4,14 +4,7 @@ import "../../App.css";
 import Axios from "axios";
 import $ from "jquery";
 import Dropdown from 'react-bootstrap/Dropdown';
-// import Popper from 'popper.js';
-// import 'bootstrap/js/dist/dropdown';
-// import DayPickerInput from 'react-day-picker/DayPickerInput';
-// import "react-day-picker/lib/style.css";
-// import Select from 'react-select';
 import Tool2Step0 from "../../components/Tool2Step0";
-// import Choices from "../../components/Choices";
-
 
 class Tool2 extends Component {
   constructor(props) {
