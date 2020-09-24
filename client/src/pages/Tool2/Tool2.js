@@ -72,6 +72,7 @@ class Tool2 extends Component {
     });
   }
 
+  // advance to display the next step, and save data to the database if necessary
   showNextStep(e) {
 
     let currentStepString = "step_" + this.state.activeStep;
@@ -85,16 +86,32 @@ class Tool2 extends Component {
     $(currentStepString).hide();
     $(nextStepString).show();
 
-    if(!this.state.tool2ID && this.state.activeStep > 0) {
+    console.log(!this.state.tool2Exists);
+
+    if(!this.state.tool2Exists && this.state.activeStep > 0) {
       console.log("creating new db entry");
       Axios.post("/api/new_tool2/" + this.state.assignmentId, {})
       .then(res => {
-        console.log(res);
+        console.log(res.data);
+
+        this.setState({activeStep: this.state.activeStep + 1});
+
       });
 
+    } else if(this.state.activeStep > 0) {
+      // entry in db already exists, update that entry
+
+      console.log("HELLO");
+
+      this.setState({activeStep: this.state.activeStep + 1});
+    } else {
+      console.log("what is happening");
+
+
+      this.setState({activeStep: this.state.activeStep + 1});
     }
 
-    this.setState({activeStep: this.state.activeStep + 1});
+
 
   }
 
