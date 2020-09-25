@@ -137,6 +137,7 @@ module.exports = function (app) {
 
 
   // get assignment given an assignment ID
+  // join with Tool1 and Tool2 so those are returned also
   app.get("/api/assignment/:id", function (req, res) {
     let assnId = req.params.id;
 
@@ -144,6 +145,9 @@ module.exports = function (app) {
       include: [
         {
           model: db.Tool1
+        },
+        {
+          model: db.Tool2
         }
       ],
       where: {

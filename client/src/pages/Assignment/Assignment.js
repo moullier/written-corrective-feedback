@@ -54,6 +54,10 @@ class Assignment extends Component {
     Axios.get("/api/assignment/" + this.state.assignmentId)
     .then(data => {
 
+      console.log(data.data);
+      console.log(data.data.Tool1);
+      console.log(data.data.Tool2);
+
       let assignedDay, dueDay, returnDay, expectationsDay, responseDueDay, responseReturnDay, peerWCFDay;
       let dueDayObj, assignedDayObj, returnDayObj, expectationsDayObj, responseDueDayObj, responseReturnDayObj, peerWCFDayObj;
       let tool1status = 0;
