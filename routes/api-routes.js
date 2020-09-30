@@ -1,4 +1,4 @@
-// Requiring our models and passport as we've configured it
+// Requiring our models and passport as configured
 
 let db = require("../models");
 let passport = require("../config/passport");
@@ -438,7 +438,7 @@ app.put("/api/tool1/step_3/:id", function (req, res) {
 
   console.log("Step 3 update function");
   console.log("The tool 1 id being modified is: " + req.params.id);
-  console.log("req.body" + req.body);
+  console.log("req.body.correctionCode" + req.body.correctionCode);
   
   db.Tool1.update({
       studentProficiencyLevel: req.body.studentProficiencyLevel,

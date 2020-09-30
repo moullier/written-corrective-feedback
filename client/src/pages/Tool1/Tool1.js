@@ -35,6 +35,7 @@ class Tool1 extends Component {
       // step 3 information
       studentProficiencyLevel: undefined,
       directnessLevel: undefined,
+      correctionCode: [],
       // step 5 information
       studentResponseAssignment: undefined,
       // state for dayPicker components
@@ -79,6 +80,7 @@ class Tool1 extends Component {
     this.handleStudentProficiencyChange = this.handleStudentProficiencyChange.bind(this);
     this.handleStudentResponseAssignmentChange = this.handleStudentResponseAssignmentChange.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
   }
 
   componentDidMount() {
@@ -172,7 +174,9 @@ class Tool1 extends Component {
           
           // format correction types as an array of strings
           const correction_types = ct_res.data.map(el => el.category);
+          const correction_code = ct_res.data.map(el => el.code);
           console.log(correction_types);
+          console.log(correction_code);
 
           this.setState({
             toolExistsInDB: dataExists,
@@ -185,6 +189,7 @@ class Tool1 extends Component {
             responseReturnDay: responseReturnDayObj,
             peerWCFDay: peerWCFDayObj,
             selectedCorrectionTypes: correction_types,
+            correctionCode: correction_code,
             studentProficiencyLevel: studentProficiencyLevel,
             directnessLevel: directnessLevel,
             expectationsSet: expectationsSet,
@@ -367,7 +372,8 @@ class Tool1 extends Component {
           console.log("updating on step 3");
           updateObject = {
             studentProficiencyLevel: this.state.studentProficiencyLevel,
-            directnessLevel: this.state.directnessLevel
+            directnessLevel: this.state.directnessLevel,
+            correctionCode: this.state.correctionCode
           };
           break;
         case 4:
@@ -479,6 +485,14 @@ class Tool1 extends Component {
   handleTextAreaChange(e) {
     const fieldName = e.target.name;
     this.setState({[fieldName]: e.target.value});
+  }
+
+  handleCodeChange(e) {
+
+    const id = parseInt(e.target.id.substring(4,5));
+    let tempArray = this.state.correctionCode;
+    tempArray[id] = e.target.value;
+    this.setState({correctionCode: tempArray});
   }
 
   // handles callback from Choices child component
@@ -630,59 +644,6 @@ class Tool1 extends Component {
     </div>
     };
 
-
-    // let languageProficiencyModal = <div className="modal" id="languageProficiencyModal" tabIndex="-1" role="dialog">
-    //   <div className="modal-dialog" role="document">
-    //     <div className="modal-content">
-    //       <div className="modal-header">
-    //         <h5 className="modal-title">Language Proficiency Levels</h5>
-    //         <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.clearNewClass}>
-    //           <span aria-hidden="true">&times;</span>
-    //         </button>
-    //       </div>
-    //       <div className="modal-body">
-    //       <table className="table selectedCorrectionsTable" id="CEFRTable">
-    //         <tbody>
-    //           <tr className="d-flex">
-    //             <td rowSpan="2">Proficient User</td>
-    //             <td>C2</td>
-    //             <td>Can understand with ease virtually everything heard or read. Can summarise information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation. Can express him/herself spontaneously, very fluently and precisely, differentiating finer shades of meaning even in more complex situations.</td>
-    //           </tr>
-    //           <tr>
-    //             <td>C1</td>
-    //             <td>text text</td>
-    //           </tr>
-    //           <tr className="d-flex">
-    //             <td rowSpan="2">Independent User</td>
-    //             <td>B2</td>
-    //             <td>text text</td>
-    //           </tr>
-    //           <tr>
-    //             <td>B1</td>
-    //             <td>text text</td>
-    //           </tr>
-    //           <tr className="d-flex">
-    //             <td rowSpan="2">Basic User</td>
-    //             <td>A2</td>
-    //             <td>text text</td>
-    //           </tr>
-    //           <tr>
-    //             <td>A1</td>
-    //             <td>text text</td>
-    //           </tr>
-    //         </tbody>
-    //       </table>
-    //       </div>
-    //       <div className="modal-footer">
-    //         <button type="button" className="btn btn-primary" onClick={this.createNewAssignment}>Save changes</button>
-    //         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>;
-
-
-
     return (
         <div className="container">
           <h1>Assignment Blueprint Tool – Plan Your Assignment!</h1>
@@ -809,43 +770,6 @@ class Tool1 extends Component {
           </div>
           <div className="initiallyHidden" id="step_3">
             <h5>Step 3: Determining the Directness of Feedback</h5>
-            {/* <table className="table feedbackTable">
-              <thead className="thead-light">
-                <tr className="d-flex">
-                  <th scope="col" className="col-4">Novice (A1 and A2)</th>
-                  <th scope="col" className="col-4">Intermediate (B1 and B2)</th>
-                  <th scope="col" className="col-4">Advanced (B2+ and C1)</th>
-                </tr>
-                <tr className="d-flex">
-                  <th scope="col" className="col-4">Direct Feedback</th>
-                  <th scope="col" className="col-4">Indirect Feedback</th>
-                  <th scope="col" className="col-4">Very Indirect Feedback</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="d-flex">
-                  <td className="col-4">
-                    Explicit correction
-                  </td>
-                  <td className="col-4">
-                    Underlining location of errors + metalinguistic explanations about their errors
-                  </td>
-                  <td className="col-4">
-                    Underlining location of errors
-                  </td>
-                </tr>
-                <tr className="d-flex">
-                  <td className="col-4">
-                    Explicit correction + metalinguistic explanations about their errors
-                  </td>
-                  <td className="col-4">
-                    Underlining location of errors + use of a <strong>correction code</strong>
-                  </td>
-                  <td className="col-4">
-                  </td>
-                </tr>
-              </tbody>
-            </table> */}
             <p>You can use the expected language proficiency of the average learner as a guide to select the type of focused feedback students will receive on this assignment.</p>
             {step3ValuesEntered}
             <div></div>
@@ -865,7 +789,27 @@ class Tool1 extends Component {
               />
             </div>
             <div id="enterCorrectionCodeDiv" className="initiallyHidden">
-              ENTER CORRECTION CODE HERE!!
+              Enter the correction codes that you will use for each error type:
+              <div className="container">
+                <div className="row">
+                  <div className="col-6">Correction Type</div>
+                  <div className="col-6">Correction Code</div>
+                </div>
+                {this.state.selectedCorrectionTypes.map((el, index) => (
+                  <div className="row" key={index}>
+                    <div className="col-6">{el}</div>
+                    <div className="col-6">
+                      <input
+                        type="text" 
+                        className="form-control mb-4"
+                        id={"code" + index}
+                        placeholder="Enter Correction Code"
+                        onChange={this.handleCodeChange}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="initiallyHidden" id="step_4">
