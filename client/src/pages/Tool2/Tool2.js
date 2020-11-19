@@ -27,11 +27,18 @@ class Tool2 extends Component {
       directnessLevel: "",
       correction_types: [],
       studentProficiencyLevel: "",
-      errorFrequencies: []
+      errorFrequencies: [],
+      newCommonErrors: [],
+      newUncommonErrors: [],
+      newRareErrors: [],
+      newCommonValue: "",
+      newUncommonValue: "",
+      newRareValue: ""
     }
 
     this.showNextStep = this.showNextStep.bind(this);
     this.selectFrequency = this.selectFrequency.bind(this);
+    this.handleAddNewError = this.handleAddNewError.bind(this);
   }
 
   componentDidMount() {
@@ -128,6 +135,26 @@ class Tool2 extends Component {
     this.setState({errorFrequencies: tempArray});
   }
 
+
+  handleAddNewError(e) {
+    const id = e.target.id;
+    switch(id) {
+      case "common":
+        console.log("common!");
+        this.setState({newCommonValue: e.target.value});
+        break;
+      case "uncommon":
+        console.log("uncommon!");
+        this.setState({newUncommonValue: e.target.value});
+        break;
+      case "rare":
+        console.log("rare!");
+        this.setState({newRareValue: e.target.value});
+        break;
+      default:      
+    }
+  }
+
   render() {
     return (
         <div className="container">
@@ -205,7 +232,48 @@ class Tool2 extends Component {
                   Rare
                 </div>
               </div>
-
+              <div className="row text-center">
+                <div className="col-4">
+                  <input
+                    type="text" 
+                    className="form-control mb-4"
+                    id="common"
+                    placeholder="Enter New Error Type"
+                    onChange={this.handleAddNewError}
+                  />
+                </div>
+                <div className="col-4">
+                  <input
+                    type="text" 
+                    className="form-control mb-4"
+                    id="uncommon"
+                    placeholder="Enter New Error Type"
+                    onChange={this.handleAddNewError}
+                  />
+                </div>
+                <div className="col-4">
+                  <input
+                      type="text" 
+                      className="form-control mb-4"
+                      id="rare"
+                      placeholder="Enter New Error Type"
+                      onChange={this.handleAddNewError}
+                  />
+                </div>
+              </div>
+              <div className="row text-center">
+                <div className="col-4">
+                  {this.state.newCommonErrors.map((el, index) => (
+                    {el}
+                  ))}
+                </div>
+                <div className="col-4">
+                  Uncommon
+                </div>
+                <div className="col-4">
+                  Rare
+                </div>
+              </div>
             </div>
           </div>
           <button className="btn btn-primary mr-3 mt-3" value="1" id="nextStepButton" onClick={this.showNextStep}>Next Step</button>

@@ -370,6 +370,12 @@ class Tool1 extends Component {
           break;
         case 3:
           console.log("updating on step 3");
+          if(this.state.correctionCode.length > 0) {
+            Axios.put("/api/correction_code/" + this.state.tool1ID, {correctionCode: this.state.correctionCode})
+            .then(code_result => {
+              console.log("response to correction code update received");
+            });
+          }
           updateObject = {
             studentProficiencyLevel: this.state.studentProficiencyLevel,
             directnessLevel: this.state.directnessLevel,
