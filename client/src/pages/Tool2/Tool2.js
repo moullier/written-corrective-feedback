@@ -39,6 +39,7 @@ class Tool2 extends Component {
     this.showNextStep = this.showNextStep.bind(this);
     this.selectFrequency = this.selectFrequency.bind(this);
     this.handleAddNewError = this.handleAddNewError.bind(this);
+    this.handleErrorChange = this.handleErrorChange.bind(this);
   }
 
   componentDidMount() {
@@ -135,8 +136,7 @@ class Tool2 extends Component {
     this.setState({errorFrequencies: tempArray});
   }
 
-
-  handleAddNewError(e) {
+  handleErrorChange(e) {
     const id = e.target.id;
     switch(id) {
       case "common":
@@ -148,6 +148,32 @@ class Tool2 extends Component {
         this.setState({newUncommonValue: e.target.value});
         break;
       case "rare":
+        console.log("rare!");
+        this.setState({newRareValue: e.target.value});
+        break;
+      default:      
+    }
+  }
+
+  handleAddNewError(e) {
+    console.log('add to list');
+    const id = e.target.id;
+    let tempArray = [];
+    switch(id) {
+      case "commonBtn":
+        tempArray = this.state.newCommonErrors;
+        tempArray.push(this.state.newCommonValue);
+        $("#common").val("");
+        this.setState({    
+          newCommonErrors: tempArray,
+          newCommonValue: ""
+        });
+        break;
+      case "uncommonBtn":
+        console.log("uncommon!");
+        this.setState({newUncommonValue: e.target.value});
+        break;
+      case "rareBtn":
         console.log("rare!");
         this.setState({newRareValue: e.target.value});
         break;
@@ -239,8 +265,13 @@ class Tool2 extends Component {
                     className="form-control mb-4"
                     id="common"
                     placeholder="Enter New Error Type"
-                    onChange={this.handleAddNewError}
+                    onChange={this.handleErrorChange}
                   />
+                  <button
+                    className="btn errorBtn btn-primary"
+                    id="commonBtn"
+                    onClick={this.handleAddNewError}
+                  >→</button>
                 </div>
                 <div className="col-4">
                   <input
@@ -248,8 +279,13 @@ class Tool2 extends Component {
                     className="form-control mb-4"
                     id="uncommon"
                     placeholder="Enter New Error Type"
-                    onChange={this.handleAddNewError}
+                    onChange={this.handleErrorChange}
                   />
+                  <button
+                    className="btn errorBtn btn-primary"
+                    id="uncommonBtn"
+                    onClick={this.handleAddNewError}
+                  >→</button>
                 </div>
                 <div className="col-4">
                   <input
@@ -257,21 +293,36 @@ class Tool2 extends Component {
                       className="form-control mb-4"
                       id="rare"
                       placeholder="Enter New Error Type"
-                      onChange={this.handleAddNewError}
+                      onChange={this.handleErrorChange}
                   />
+                  <button
+                    className="btn errorBtn btn-primary"
+                    id="rareBtn"
+                    onClick={this.handleAddNewError}
+                  >→</button>
                 </div>
               </div>
               <div className="row text-center">
                 <div className="col-4">
-                  {this.state.newCommonErrors.map((el, index) => (
-                    {el}
-                  ))}
+                  <ul>
+                    {this.state.newCommonErrors.map((el, index) => (
+                      <li key={index}>{el}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="col-4">
-                  Uncommon
+                  <ul>
+                    {this.state.newUncommonErrors.map((el, index) => (
+                      <li key={index}>{el}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="col-4">
-                  Rare
+                  <ul>
+                    {this.state.newRareErrors.map((el, index) => (
+                      <li key={index}>{el}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
