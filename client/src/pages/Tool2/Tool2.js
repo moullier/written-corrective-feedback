@@ -134,6 +134,7 @@ class Tool2 extends Component {
     let tempArray = this.state.errorFrequencies;
     tempArray[index] = freq;
     this.setState({errorFrequencies: tempArray});
+
   }
 
   handleErrorChange(e) {
@@ -170,12 +171,22 @@ class Tool2 extends Component {
         });
         break;
       case "uncommonBtn":
-        console.log("uncommon!");
-        this.setState({newUncommonValue: e.target.value});
+        tempArray = this.state.newUncommonErrors;
+        tempArray.push(this.state.newUncommonValue);
+        $("#uncommon").val("");
+        this.setState({    
+          newUncommonErrors: tempArray,
+          newUncommonValue: ""
+        });
         break;
       case "rareBtn":
-        console.log("rare!");
-        this.setState({newRareValue: e.target.value});
+        tempArray = this.state.newRareErrors;
+        tempArray.push(this.state.newRareValue);
+        $("#rare").val("");
+        this.setState({    
+          newRareErrors: tempArray,
+          newRareValue: ""
+        });
         break;
       default:      
     }
@@ -259,10 +270,10 @@ class Tool2 extends Component {
                 </div>
               </div>
               <div className="row text-center">
-                <div className="col-4">
+                <div className="col-4 errorDiv">
                   <input
                     type="text" 
-                    className="form-control mb-4"
+                    className="form-control mb-4 error-input"
                     id="common"
                     placeholder="Enter New Error Type"
                     onChange={this.handleErrorChange}
@@ -273,10 +284,10 @@ class Tool2 extends Component {
                     onClick={this.handleAddNewError}
                   >→</button>
                 </div>
-                <div className="col-4">
+                <div className="col-4 errorDiv">
                   <input
                     type="text" 
-                    className="form-control mb-4"
+                    className="form-control mb-4 error-input"
                     id="uncommon"
                     placeholder="Enter New Error Type"
                     onChange={this.handleErrorChange}
@@ -288,18 +299,24 @@ class Tool2 extends Component {
                   >→</button>
                 </div>
                 <div className="col-4">
-                  <input
-                      type="text" 
-                      className="form-control mb-4"
-                      id="rare"
-                      placeholder="Enter New Error Type"
-                      onChange={this.handleErrorChange}
-                  />
+                  {/* <input type="submit"value="Find" style={{float: "right"}} /> */}
+                  <div style={{overflow: "hidden", paddingRight: ".5em"}}>
+                    <input type="text" style={{width: "100%"}} />
+                  </div>
                   <button
                     className="btn errorBtn btn-primary"
                     id="rareBtn"
                     onClick={this.handleAddNewError}
                   >→</button>
+                  {/* <div classname="errorDiv">
+                    <input
+                        type="text" 
+                        className="form-control mb-4 error-input"
+                        id="rare"
+                        placeholder="Enter New Error Type"
+                        onChange={this.handleErrorChange}
+                    />
+                  </div> */}
                 </div>
               </div>
               <div className="row text-center">

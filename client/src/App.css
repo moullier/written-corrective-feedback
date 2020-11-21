@@ -93,7 +93,23 @@ fieldset[disabled] .btn-primary.active {
 }
 
 
+/* small button styling */
 
+.errorBtn {
+  float: right;
+}
+
+.error-input {
+  width: 75%
+}
+
+.errorDiv {
+  overflow: hidden;
+  padding-right: .5em;
+  display: inline;
+}
+
+/* Collapsible styling */
 
 .Collapsible {
   background-color: white; }
@@ -145,3 +161,5 @@ fieldset[disabled] .btn-primary.active {
   font-size: 12px;
   background-color: #CBB700;
   color: black; }
+
+
